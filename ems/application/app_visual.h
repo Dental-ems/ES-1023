@@ -11,6 +11,10 @@
 
 #include "../lib/lib_led_mb.h"
 
-void app_visual_init ( void );
+extern uint8_t ES_1023_status;
+
+BaseType_t  app_visual_init     ( void );
+void 		app_visual_mb_run   ( void );
+void 		app_visual_mb_error ( void );
 
 #endif /* APP_VISUAL_H_ */

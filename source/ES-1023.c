@@ -37,68 +37,46 @@
  * @date    08.02.2023
  *******************************************************************************/
 #include <stdio.h>
+
 #include "board.h"
 #include "peripherals.h"
-#include "pin_mux.h"
 #include "clock_config.h"
 #include "LPC5528.h"
-#include "fsl_debug_console.h"
-#include "fsl_gpio.h"
 #include "fsl_power.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define my_task_PRIORITY (configMAX_PRIORITIES - 1)
-static void my_task ( void *pvParameters );
+#include "../ems/application/app_visual.h"
 
 /*******************************************************************************
- * @brief   Application entry point
+ * @brief Constants
  ******************************************************************************/
-int main(void)
-{
-    /* Define the init structure for the output LED pin*/
-    gpio_pin_config_t led_config = {
-        kGPIO_DigitalOutput,
-        0,
-    };
 
+/*******************************************************************************
+ * @brief Global
+ ******************************************************************************/
+uint8_t ES_1023_status = 0;
+
+/*******************************************************************************
+ * @brief Prototypes
+ ******************************************************************************/
+void EMS_task_manager ( void );
+
+/*******************************************************************************
+ * @brief
+ ******************************************************************************/
+int main ( void )
+{
     // Board pin, clock, debug console init
     // set BOD VBAT level to 1.65V
     POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
 
-    // enable clock for GPIO
-    CLOCK_EnableClock(kCLOCK_Gpio0);
-    CLOCK_EnableClock(kCLOCK_Gpio1);
-
     // Init board hardware
-    BOARD_InitBootPins();
     BOARD_BootClockFRO12M();
     BOARD_InitBootPeripherals();
 
-#ifndef BOARD_INIT_DEBUG_CONSOLE_PERIPHERAL
-    // Init FSL debug console.
-    BOARD_InitDebugConsole();
-#endif
-
-    // Init output LED GPIO
-    GPIO_PortInit(GPIO, BOARD_INITPINS_LED_MAIN_PORT);
-    GPIO_PinInit(GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, &led_config);
-    GPIO_PinWrite(GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, 1);
-
-    // Port masking
-    GPIO_PortMaskedSet(GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0x0000FFFF);
-    GPIO_PortMaskedWrite(GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0xFFFFFFFF);
-
-    BaseType_t result = xTaskCreate(my_task, "my_task", configMINIMAL_STACK_SIZE + 10, NULL, my_task_PRIORITY, NULL);
-
-	if ( result != pdPASS)
-	{
-		while (1)
-		{
-			;
-		}
-	}
+    EMS_task_manager ();
 
 	vTaskStartScheduler();
 
@@ -113,12 +91,19 @@ int main(void)
 /*******************************************************************************
  * @brief
  ******************************************************************************/
-static void my_task ( void *pvParameters )
+void EMS_task_manager ( void )
 {
-	while (1)
-	{
-		GPIO_PortToggle ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 1u << BOARD_INITPINS_LED_MAIN_PIN );
+	BaseType_t result = pdFAIL;
 
-		vTaskDelay(500U);
+	result = app_visual_init ();
+
+	if ( result != pdPASS )
+	{
+		while (1)
+		{
+			;
+		}
 	}
+
+	ES_1023_status = 1;
 }
