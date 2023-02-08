@@ -16,18 +16,23 @@
 
 #include "drv_io.h"
 
+bool drv_io_is_ready = false;
+
 /******************************************************************************
  * @brief
  *****************************************************************************/
 void drv_io_init ( void )
 {
-    // enable clock for GPIO
-    CLOCK_EnableClock ( kCLOCK_Gpio0 );
-    CLOCK_EnableClock ( kCLOCK_Gpio1 );
+	if ( false == drv_io_is_ready )
+	{
+		// enable clock for GPIO
+		CLOCK_EnableClock ( kCLOCK_Gpio0 );
+		CLOCK_EnableClock ( kCLOCK_Gpio1 );
 
-    BOARD_InitBootPins ();
+		BOARD_InitBootPins ();
 
-    drv_io_led_main_init ();
+		drv_io_is_ready = true;
+	}
 }
 
 /******************************************************************************
@@ -35,6 +40,8 @@ void drv_io_init ( void )
  *****************************************************************************/
 void drv_io_led_main_init ( void )
 {
+	drv_io_init ();
+
     gpio_pin_config_t led_main_cfg = {
         kGPIO_DigitalOutput,
         0,

@@ -49,9 +49,9 @@ BaseType_t app_visual_init ( void )
 
 	ES_1023_status = 0;
 
-	lib_led_mb_init();
+	result = xTaskCreate ( app_visual_heartbeat, "visual module", configMINIMAL_STACK_SIZE + 10, NULL, APP_VISUAL_PRIORITY, NULL);
 
-	result = xTaskCreate ( app_visual_heartbeat, "Visual module", configMINIMAL_STACK_SIZE + 10, NULL, APP_VISUAL_PRIORITY, NULL);
+	lib_led_mb_init();
 
 	return result;
 }
