@@ -19,6 +19,8 @@
 void lib_led_mb_init ( void )
 {
 	drv_io_led_main_init ();
+
+	lib_led_mb_enable();
 }
 
 /******************************************************************************

@@ -18,9 +18,22 @@
  ******************************************************************************/
 void lib_device_bt_init ( void )
 {
-	;
+	drv_io_btm_init ();
+
+	drv_io_btm_power_on ();
 }
 
 /******************************************************************************
  * @brief
  ******************************************************************************/
+void lib_device_bt_pairing_on_off ( bool on_off )
+{
+	if ( true == on_off )
+	{
+		drv_io_btm_pairing_on ();
+	}
+	else
+	{
+		drv_io_btm_pairing_off ();
+	}
+}

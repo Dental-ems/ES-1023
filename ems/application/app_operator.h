@@ -11,6 +11,6 @@
 
 #include "../lib/lib_device_bt.h"
 
-BaseType_t app_visual_init ( void );
+BaseType_t app_operator_init ( void );
 
 #endif /* APP_OPERATOR_H_ */

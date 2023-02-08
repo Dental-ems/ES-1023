@@ -19,8 +19,8 @@
 /*******************************************************************************
  * @brief Constants
  ******************************************************************************/
-#define APP_VISUAL_BLINK_RUN_MS	1000U
-#define APP_VISUAL_PRIORITY 	(configMAX_PRIORITIES - 1)
+#define APP_VISUAL_PRIORITY 	   (configMAX_PRIORITIES - 2)
+#define APP_VISUAL_BLINK_RUN_MS	   1000U
 
 /******************************************************************************
  * @brief
@@ -49,7 +49,7 @@ BaseType_t app_visual_init ( void )
 
 	ES_1023_status = 0;
 
-	result = xTaskCreate ( app_visual_heartbeat, "visual module", configMINIMAL_STACK_SIZE + 10, NULL, APP_VISUAL_PRIORITY, NULL);
+	result = xTaskCreate ( app_visual_heartbeat, "visual_module", configMINIMAL_STACK_SIZE + 20, NULL, APP_VISUAL_PRIORITY, NULL);
 
 	lib_led_mb_init();
 

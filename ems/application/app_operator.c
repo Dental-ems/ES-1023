@@ -19,7 +19,8 @@
 /*******************************************************************************
  * @brief Constants
  ******************************************************************************/
-#define APP_OPERATOR_PRIORITY (configMAX_PRIORITIES - 2)
+#define APP_OPERATOR_PRIORITY      (configMAX_PRIORITIES - 1)
+#define APP_OPERATOR_LOOP_RUN_MS   1000U
 
 /******************************************************************************
  * @brief
@@ -28,7 +29,9 @@ static void app_operator_heartbeat ( void *pvParameters )
 {
 	while (1)
 	{
-		;
+		lib_device_bt_pairing_on_off ( false );
+
+		vTaskDelay ( APP_OPERATOR_LOOP_RUN_MS );
 	}
 }
 
@@ -39,7 +42,7 @@ BaseType_t app_operator_init ( void )
 {
 	BaseType_t result = pdFAIL;
 
-	result = xTaskCreate ( app_operator_heartbeat, "operator module", configMINIMAL_STACK_SIZE + 10, NULL, APP_OPERATOR_PRIORITY, NULL);
+	result = xTaskCreate ( app_operator_heartbeat, "operator_module", configMINIMAL_STACK_SIZE + 20, NULL, APP_OPERATOR_PRIORITY, NULL);
 
 	lib_device_bt_init();
 

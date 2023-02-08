@@ -13,5 +13,6 @@
 
 void lib_led_mb_init   ( void );
 void lib_led_mb_toogle ( void );
+void lib_led_mb_enable ( void );
 
 #endif /* LIB_LED_MB_H_ */

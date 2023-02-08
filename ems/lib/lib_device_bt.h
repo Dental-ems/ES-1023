@@ -11,6 +11,7 @@
 
 #include "../drv/drv_io.h"
 
-void lib_device_bt_init   ( void );
+void lib_device_bt_init			  ( void );
+void lib_device_bt_pairing_on_off ( bool on_off );
 
 #endif /* LIB_DEVICE_BT_H_ */

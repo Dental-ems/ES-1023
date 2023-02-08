@@ -11,6 +11,8 @@
 
 void drv_io_init			( void );
 void drv_io_led_main_init 	( void );
+void drv_io_btm_init 		( void );
+
 void drv_io_led_main_toogle ( void );
 void drv_io_led_main_high 	( void );
 
