@@ -11,7 +11,21 @@
 
 #include "../drv/drv_io.h"
 
+typedef struct
+{
+	uint8_t pin_s1;
+	uint8_t pin_s2;
+	uint8_t pin_p1;
+	uint8_t pin_p2;
+} LIB_DEVICE_BTM_CTX;
+
 void lib_device_bt_init			  ( void );
 void lib_device_bt_pairing_on_off ( bool on_off );
+void lib_device_bt_power_on_off   ( bool on_off );
+
+void lib_device_update_s1 ( pint_pin_int_t pintr, uint32_t pmatch_status );
+void lib_device_update_s2 ( pint_pin_int_t pintr, uint32_t pmatch_status );
+void lib_device_update_p1 ( pint_pin_int_t pintr, uint32_t pmatch_status );
+void lib_device_update_p2 ( pint_pin_int_t pintr, uint32_t pmatch_status );
 
 #endif /* LIB_DEVICE_BT_H_ */

@@ -32,38 +32,17 @@ void BOARD_InitBootPins(void);
  * @brief Selects pin function.: Alternative connection 0. */
 #define PIO1_10_FUNC_ALT0 0x00u
 /*!
- * @brief
- * Selects function mode (on-chip pull-up/pull-down resistor control).
- * : Inactive.
- * Inactive (no pull-down/pull-up resistor enabled).
- */
-#define PIO1_10_MODE_INACTIVE 0x00u
-/*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_11_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Selects pin function.: Alternative connection 0. */
 #define PIO1_11_FUNC_ALT0 0x00u
 /*!
- * @brief
- * Selects function mode (on-chip pull-up/pull-down resistor control).
- * : Inactive.
- * Inactive (no pull-down/pull-up resistor enabled).
- */
-#define PIO1_11_MODE_INACTIVE 0x00u
-/*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_14_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Selects pin function.: Alternative connection 0. */
 #define PIO1_14_FUNC_ALT0 0x00u
-/*!
- * @brief
- * Selects function mode (on-chip pull-up/pull-down resistor control).
- * : Inactive.
- * Inactive (no pull-down/pull-up resistor enabled).
- */
-#define PIO1_14_MODE_INACTIVE 0x00u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_20_DIGIMODE_DIGITAL 0x01u
@@ -152,6 +131,13 @@ void BOARD_InitBootPins(void);
 
 /*! @name PIO1_20 (number 4), BTM_S1
   @{ */
+#define BOARD_INITPINS_BTM_IT_S1_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_BTM_IT_S1_PIN 20U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_BTM_IT_S1_PIN_MASK (1U << 20U)      /*!<@brief PORT pin mask */
+                                                           /* @} */
+
+/*! @name PIO1_20 (number 4), BTM_S1
+  @{ */
 
 /* Symbols to be used with GPIO driver */
 #define BOARD_INITPINS_BTM_S1_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
@@ -172,6 +158,13 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_BTM_S2_PIN_MASK (1U << 10U)      /*!<@brief PORT pin mask */
                                                         /* @} */
 
+/*! @name PIO1_10 (number 40), BTM_S2
+  @{ */
+#define BOARD_INITPINS_BTM_IT_S2_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_BTM_IT_S2_PIN 10U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_BTM_IT_S2_PIN_MASK (1U << 10U)      /*!<@brief PORT pin mask */
+                                                           /* @} */
+
 /*! @name PIO1_11 (number 93), BTM_P1
   @{ */
 
@@ -183,6 +176,13 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_BTM_P1_PIN_MASK (1U << 11U)      /*!<@brief PORT pin mask */
                                                         /* @} */
 
+/*! @name PIO1_11 (number 93), BTM_P1
+  @{ */
+#define BOARD_INITPINS_BTM_IT_P1_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_BTM_IT_P1_PIN 11U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_BTM_IT_P1_PIN_MASK (1U << 11U)      /*!<@brief PORT pin mask */
+                                                           /* @} */
+
 /*! @name PIO1_14 (number 57), BTM_P2
   @{ */
 
@@ -193,6 +193,13 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_BTM_P2_PIN 14U                   /*!<@brief PORT pin number */
 #define BOARD_INITPINS_BTM_P2_PIN_MASK (1U << 14U)      /*!<@brief PORT pin mask */
                                                         /* @} */
+
+/*! @name PIO1_14 (number 57), BTM_P2
+  @{ */
+#define BOARD_INITPINS_BTM_IT_P2_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_BTM_IT_P2_PIN 14U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_BTM_IT_P2_PIN_MASK (1U << 14U)      /*!<@brief PORT pin mask */
+                                                           /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

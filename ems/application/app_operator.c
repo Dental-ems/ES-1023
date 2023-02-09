@@ -27,11 +27,13 @@
  *****************************************************************************/
 static void app_operator_heartbeat ( void *pvParameters )
 {
+	lib_device_bt_power_on_off ( true );
+
 	while (1)
 	{
-		lib_device_bt_pairing_on_off ( false );
+		vTaskDelay ( APP_OPERATOR_LOOP_RUN_MS * 10 );
 
-		vTaskDelay ( APP_OPERATOR_LOOP_RUN_MS );
+		lib_device_bt_pairing_on_off ( true );
 	}
 }
 
