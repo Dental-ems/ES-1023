@@ -45,13 +45,17 @@ void BOARD_InitBootPins(void)
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', coreID: cm33_core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '30', peripheral: GPIO, signal: 'PIO1, 21', pin_signal: PIO1_21/FC7_CTS_SDA_SSEL0/CTIMER3_MAT2/FC4_RXD_SDA_MOSI_DATA/PLU_OUT3, direction: OUTPUT, mode: inactive}
-  - {pin_num: '31', peripheral: GPIO, signal: 'PIO1, 5', pin_signal: PIO1_5/FC0_RXD_SDA_MOSI_DATA/SD0_D2/CTIMER2_MAT0/SCT_GPI0, direction: OUTPUT, mode: inactive}
-  - {pin_num: '3', peripheral: GPIO, signal: 'PIO1, 24', pin_signal: PIO1_24/FC2_RXD_SDA_MOSI_DATA/SCT0_OUT1/SD1_D1/FC3_SSEL3/PLU_OUT6, direction: OUTPUT, mode: inactive}
-  - {pin_num: '4', peripheral: GPIO, signal: 'PIO1, 20', pin_signal: PIO1_20/FC7_RTS_SCL_SSEL1/CT_INP14/FC4_TXD_SCL_MISO_WS/PLU_OUT2, direction: INPUT}
-  - {pin_num: '40', peripheral: GPIO, signal: 'PIO1, 10', pin_signal: PIO1_10/FC1_RXD_SDA_MOSI_DATA/CTIMER1_MAT0/SCT0_OUT3, direction: INPUT}
-  - {pin_num: '93', peripheral: GPIO, signal: 'PIO1, 11', pin_signal: PIO1_11/FC1_TXD_SCL_MISO_WS/CT_INP5/USB0_VBUS, direction: INPUT}
-  - {pin_num: '57', peripheral: GPIO, signal: 'PIO1, 14', pin_signal: PIO1_14/UTICK_CAP2/CTIMER1_MAT2/FC5_CTS_SDA_SSEL0/USB0_LEDN/SD1_CMD/ACMP0_D, direction: INPUT}
+  - {pin_num: '30', peripheral: GPIO, signal: 'PIO1, 21', pin_signal: PIO1_21/FC7_CTS_SDA_SSEL0/CTIMER3_MAT2/FC4_RXD_SDA_MOSI_DATA/PLU_OUT3, direction: OUTPUT, gpio_init_state: 'false',
+    mode: inactive}
+  - {pin_num: '31', peripheral: GPIO, signal: 'PIO1, 5', pin_signal: PIO1_5/FC0_RXD_SDA_MOSI_DATA/SD0_D2/CTIMER2_MAT0/SCT_GPI0, direction: OUTPUT, gpio_init_state: 'false',
+    mode: inactive}
+  - {pin_num: '3', peripheral: GPIO, signal: 'PIO1, 24', pin_signal: PIO1_24/FC2_RXD_SDA_MOSI_DATA/SCT0_OUT1/SD1_D1/FC3_SSEL3/PLU_OUT6, direction: OUTPUT, gpio_init_state: 'false',
+    mode: inactive}
+  - {pin_num: '4', peripheral: GPIO, signal: 'PIO1, 20', pin_signal: PIO1_20/FC7_RTS_SCL_SSEL1/CT_INP14/FC4_TXD_SCL_MISO_WS/PLU_OUT2, direction: INPUT, mode: inactive}
+  - {pin_num: '40', peripheral: GPIO, signal: 'PIO1, 10', pin_signal: PIO1_10/FC1_RXD_SDA_MOSI_DATA/CTIMER1_MAT0/SCT0_OUT3, direction: INPUT, mode: inactive}
+  - {pin_num: '93', peripheral: GPIO, signal: 'PIO1, 11', pin_signal: PIO1_11/FC1_TXD_SCL_MISO_WS/CT_INP5/USB0_VBUS, direction: INPUT, mode: inactive}
+  - {pin_num: '57', peripheral: GPIO, signal: 'PIO1, 14', pin_signal: PIO1_14/UTICK_CAP2/CTIMER1_MAT2/FC5_CTS_SDA_SSEL0/USB0_LEDN/SD1_CMD/ACMP0_D, direction: INPUT,
+    mode: inactive}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -122,11 +126,16 @@ void BOARD_InitPins(void)
 
     IOCON->PIO[1][10] = ((IOCON->PIO[1][10] &
                           /* Mask bits to zero which are setting */
-                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_MODE_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
                          /* Selects pin function.
                           * : PORT110 (pin 40) is configured as PIO1_10. */
                          | IOCON_PIO_FUNC(PIO1_10_FUNC_ALT0)
+
+                         /* Selects function mode (on-chip pull-up/pull-down resistor control).
+                          * : Inactive.
+                          * Inactive (no pull-down/pull-up resistor enabled). */
+                         | IOCON_PIO_MODE(PIO1_10_MODE_INACTIVE)
 
                          /* Select Digital mode.
                           * : Enable Digital mode.
@@ -135,11 +144,16 @@ void BOARD_InitPins(void)
 
     IOCON->PIO[1][11] = ((IOCON->PIO[1][11] &
                           /* Mask bits to zero which are setting */
-                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_MODE_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
                          /* Selects pin function.
                           * : PORT111 (pin 93) is configured as PIO1_11. */
                          | IOCON_PIO_FUNC(PIO1_11_FUNC_ALT0)
+
+                         /* Selects function mode (on-chip pull-up/pull-down resistor control).
+                          * : Inactive.
+                          * Inactive (no pull-down/pull-up resistor enabled). */
+                         | IOCON_PIO_MODE(PIO1_11_MODE_INACTIVE)
 
                          /* Select Digital mode.
                           * : Enable Digital mode.
@@ -148,11 +162,16 @@ void BOARD_InitPins(void)
 
     IOCON->PIO[1][14] = ((IOCON->PIO[1][14] &
                           /* Mask bits to zero which are setting */
-                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_MODE_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
                          /* Selects pin function.
                           * : PORT114 (pin 57) is configured as PIO1_14. */
                          | IOCON_PIO_FUNC(PIO1_14_FUNC_ALT0)
+
+                         /* Selects function mode (on-chip pull-up/pull-down resistor control).
+                          * : Inactive.
+                          * Inactive (no pull-down/pull-up resistor enabled). */
+                         | IOCON_PIO_MODE(PIO1_14_MODE_INACTIVE)
 
                          /* Select Digital mode.
                           * : Enable Digital mode.
@@ -161,11 +180,16 @@ void BOARD_InitPins(void)
 
     IOCON->PIO[1][20] = ((IOCON->PIO[1][20] &
                           /* Mask bits to zero which are setting */
-                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_MODE_MASK | IOCON_PIO_DIGIMODE_MASK)))
 
                          /* Selects pin function.
                           * : PORT120 (pin 4) is configured as PIO1_20. */
                          | IOCON_PIO_FUNC(PIO1_20_FUNC_ALT0)
+
+                         /* Selects function mode (on-chip pull-up/pull-down resistor control).
+                          * : Inactive.
+                          * Inactive (no pull-down/pull-up resistor enabled). */
+                         | IOCON_PIO_MODE(PIO1_20_MODE_INACTIVE)
 
                          /* Select Digital mode.
                           * : Enable Digital mode.

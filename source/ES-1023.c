@@ -48,6 +48,7 @@
 #include "task.h"
 
 #include "../ems/application/app_visual.h"
+#include "../ems/application/app_operator.h"
 
 /*******************************************************************************
  * @brief Constants
@@ -70,15 +71,15 @@ int main ( void )
 {
     // Board pin, clock, debug console init
     // set BOD VBAT level to 1.65V
-    POWER_SetBodVbatLevel(kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false);
+    POWER_SetBodVbatLevel ( kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false );
 
     // Init board hardware
-    BOARD_BootClockFRO12M();
-    BOARD_InitBootPeripherals();
+    BOARD_BootClockFRO12M ();
+    BOARD_InitBootPeripherals ();
 
     EMS_task_manager ();
 
-	vTaskStartScheduler();
+	vTaskStartScheduler ();
 
 	while (1)
 	{
@@ -96,6 +97,8 @@ void EMS_task_manager ( void )
 	BaseType_t result = pdFAIL;
 
 	result = app_visual_init ();
+
+	if ( pdPASS == result ) result = app_operator_init ();
 
 	if ( result != pdPASS )
 	{

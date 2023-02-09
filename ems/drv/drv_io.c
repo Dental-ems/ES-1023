@@ -16,7 +16,7 @@
 
 #include "drv_io.h"
 
-bool drv_io_is_ready = false;
+static bool drv_io_is_ready = false;
 
 /******************************************************************************
  * @brief
@@ -30,6 +30,21 @@ void drv_io_init ( void )
 		CLOCK_EnableClock ( kCLOCK_Gpio1 );
 
 		BOARD_InitBootPins ();
+
+		GPIO_PortInit ( GPIO, BOARD_INITPINS_LED_MAIN_PORT );
+
+#if 0 // Ports are all the same
+		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_OFF_PORT );
+		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_PAIRING_PORT );
+		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_S1_PORT );
+		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_S2_PORT );
+		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_P1_PORT );
+		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_P2_PORT );
+#endif
+
+		// Port masking
+		//GPIO_PortMaskedSet   ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0x0000FFFF );
+		//GPIO_PortMaskedWrite ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0xFFFFFFFF );
 
 		drv_io_is_ready = true;
 	}
@@ -47,12 +62,7 @@ void drv_io_led_main_init ( void )
         0,
     };
 
-    GPIO_PortInit ( GPIO, BOARD_INITPINS_LED_MAIN_PORT );
-    GPIO_PinInit  ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, &led_main_cfg );
-
-    // Port masking
-    //GPIO_PortMaskedSet   ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0x0000FFFF );
-    //GPIO_PortMaskedWrite ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0xFFFFFFFF );
+	GPIO_PinInit ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, &led_main_cfg );
 }
 
 /******************************************************************************
@@ -92,19 +102,12 @@ void drv_io_btm_init ( void )
         0,
     };
 
-    GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_OFF_PORT );
-    GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_PAIRING_PORT );
-    GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_S1_PORT );
-    GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_S2_PORT );
-    GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_P1_PORT );
-    GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_P2_PORT );
-
-    GPIO_PinInit  ( GPIO, BOARD_INITPINS_BTM_OFF_PORT, BOARD_INITPINS_BTM_OFF_PIN, &btm_off_cfg );
-    GPIO_PinInit  ( GPIO, BOARD_INITPINS_BTM_PAIRING_PORT, BOARD_INITPINS_BTM_PAIRING_PIN, &btm_pairing_cfg );
-    GPIO_PinInit  ( GPIO, BOARD_INITPINS_BTM_S1_PORT, BOARD_INITPINS_BTM_S1_PIN, &btm_s1_cfg );
-    GPIO_PinInit  ( GPIO, BOARD_INITPINS_BTM_S2_PORT, BOARD_INITPINS_BTM_S2_PIN, &btm_s2_cfg );
-    GPIO_PinInit  ( GPIO, BOARD_INITPINS_BTM_P1_PORT, BOARD_INITPINS_BTM_P1_PIN, &btm_p1_cfg );
-    GPIO_PinInit  ( GPIO, BOARD_INITPINS_BTM_P2_PORT, BOARD_INITPINS_BTM_P2_PIN, &btm_p2_cfg );
+    GPIO_PinInit ( GPIO, BOARD_INITPINS_BTM_OFF_PORT, BOARD_INITPINS_BTM_OFF_PIN, &btm_off_cfg );
+    GPIO_PinInit ( GPIO, BOARD_INITPINS_BTM_PAIRING_PORT, BOARD_INITPINS_BTM_PAIRING_PIN, &btm_pairing_cfg );
+    GPIO_PinInit ( GPIO, BOARD_INITPINS_BTM_S1_PORT, BOARD_INITPINS_BTM_S1_PIN, &btm_s1_cfg );
+    GPIO_PinInit ( GPIO, BOARD_INITPINS_BTM_S2_PORT, BOARD_INITPINS_BTM_S2_PIN, &btm_s2_cfg );
+    GPIO_PinInit ( GPIO, BOARD_INITPINS_BTM_P1_PORT, BOARD_INITPINS_BTM_P1_PIN, &btm_p1_cfg );
+    GPIO_PinInit ( GPIO, BOARD_INITPINS_BTM_P2_PORT, BOARD_INITPINS_BTM_P2_PIN, &btm_p2_cfg );
 }
 
 /******************************************************************************
