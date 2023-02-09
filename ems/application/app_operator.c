@@ -27,13 +27,50 @@
  *****************************************************************************/
 static void app_operator_heartbeat ( void *pvParameters )
 {
+	// Activate power on bt module
 	lib_device_bt_power_on_off ( true );
+
+	// Enable pairing
+	lib_device_bt_pairing_on_off ( true );
 
 	while (1)
 	{
-		vTaskDelay ( APP_OPERATOR_LOOP_RUN_MS * 10 );
+		vTaskDelay ( APP_OPERATOR_LOOP_RUN_MS );
 
-		lib_device_bt_pairing_on_off ( true );
+		// Read status
+		if ( true == lib_device_bt_is_connected () )
+		{
+			// CONNECTED !!
+
+			// Disable pairing
+			lib_device_bt_pairing_on_off ( false );
+		}
+		else if ( true == lib_device_bt_is_bat_low () )
+		{
+			// BAT LOW !!
+		}
+		else if ( true == lib_device_bt_is_pairing () )
+		{
+			// PAIRING
+		}
+		else
+		{
+			// UNDEFINED
+		}
+
+		// Read command
+		if ( true == lib_device_bt_is_boost_on () )
+		{
+			// BOOST !!
+		}
+		else if ( true == lib_device_bt_is_power_on () )
+		{
+			// POWER !!
+		}
+		else
+		{
+			// OFF !!
+		}
 	}
 }
 

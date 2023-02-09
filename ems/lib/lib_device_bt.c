@@ -95,3 +95,58 @@ void lib_device_update_p2 ( pint_pin_int_t pintr, uint32_t pmatch_status )
 {
 	lib_device_btm_ctx.pin_p2 = drv_io_btm_get_p2 ();
 }
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+bool lib_device_bt_is_connected ( void )
+{
+	if ( ( 1 == lib_device_btm_ctx.pin_s1 ) && ( 1 == lib_device_btm_ctx.pin_s2 ) )
+		return true;
+	else
+		return false;
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+bool lib_device_bt_is_power_on ( void )
+{
+	if ( ( 1 == lib_device_btm_ctx.pin_p1 ) && ( 0 == lib_device_btm_ctx.pin_p2 ) )
+		return true;
+	else
+		return false;
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+bool lib_device_bt_is_boost_on ( void )
+{
+	if ( ( 1 == lib_device_btm_ctx.pin_p1 ) && ( 1 == lib_device_btm_ctx.pin_p2 ) )
+		return true;
+	else
+		return false;
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+bool lib_device_bt_is_bat_low ( void )
+{
+	if ( ( 1 == lib_device_btm_ctx.pin_s1 ) && ( 0 == lib_device_btm_ctx.pin_s2 ) )
+		return true;
+	else
+		return false;
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+bool lib_device_bt_is_pairing ( void )
+{
+	if ( ( 0 == lib_device_btm_ctx.pin_s1 ) && ( 1 == lib_device_btm_ctx.pin_s2 ) )
+		return true;
+	else
+		return false;
+}

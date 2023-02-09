@@ -28,4 +28,10 @@ void lib_device_update_s2 ( pint_pin_int_t pintr, uint32_t pmatch_status );
 void lib_device_update_p1 ( pint_pin_int_t pintr, uint32_t pmatch_status );
 void lib_device_update_p2 ( pint_pin_int_t pintr, uint32_t pmatch_status );
 
+bool lib_device_bt_is_connected ( void );
+bool lib_device_bt_is_power_on  ( void );
+bool lib_device_bt_is_boost_on  ( void );
+bool lib_device_bt_is_bat_low   ( void );
+bool lib_device_bt_is_pairing   ( void );
+
 #endif /* LIB_DEVICE_BT_H_ */
