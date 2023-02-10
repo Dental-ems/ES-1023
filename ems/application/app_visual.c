@@ -11,34 +11,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "FreeRTOS.h"
-#include "task.h"
-
 #include "app_visual.h"
-
-/*******************************************************************************
- * @brief Constants
- ******************************************************************************/
-#define APP_VISUAL_PRIORITY 	   (configMAX_PRIORITIES - 2)
-#define APP_VISUAL_BLINK_RUN_MS	   1000U
 
 /*******************************************************************************
  * @brief Variables
  ******************************************************************************/
-typedef struct
-{
-	uint8_t key;
-	uint8_t value;
-} APP_MSG;
-
-typedef struct
-{
-	QueueHandle_t handle;
-
-	uint8_t status;
-	uint16_t next_period;
-} APP_VISUAL_CTX;
-
 APP_VISUAL_CTX app_visual_ctx;
 
 /******************************************************************************
@@ -46,22 +23,21 @@ APP_VISUAL_CTX app_visual_ctx;
  *****************************************************************************/
 static void app_visual_heartbeat ( void *pvParameters )
 {
-	BaseType_t result = pdFAIL;
+	MISC_MSG_BODY visual_msg;
 
-	APP_MSG operator_msg;
-	memset ( &operator_msg, 0, sizeof ( APP_MSG ) );
+	memset ( &visual_msg, 0, sizeof ( MISC_MSG_BODY ) );
 
 	while (1)
 	{
-		if ( 0 == app_visual_ctx.status )
+		if ( 13 == app_visual_ctx.status )
 		{
 			app_visual_mb_run ();
 		}
-		else if ( 20 == app_visual_ctx.status )
+		else if ( 21 == app_visual_ctx.status )
 		{
 			app_visual_mb_boost ();
 		}
-		else if ( 40 == app_visual_ctx.status )
+		else if ( 22 == app_visual_ctx.status )
 		{
 			app_visual_mb_power ();
 		}
@@ -70,10 +46,9 @@ static void app_visual_heartbeat ( void *pvParameters )
 			app_visual_mb_error ();
 		}
 
-		result = xQueueReceive ( app_visual_ctx.handle, &operator_msg, ( TickType_t ) 0 );
-		if ( pdPASS == result )
+		if ( true == misc_get_msg ( app_visual_ctx.handle, &visual_msg ) )
 		{
-			app_visual_ctx.status = operator_msg.value * operator_msg.key * 10;
+			app_visual_ctx.status = visual_msg.value + visual_msg.key * 10;
 		}
 
 		vTaskDelay ( app_visual_ctx.next_period );
@@ -83,19 +58,21 @@ static void app_visual_heartbeat ( void *pvParameters )
 /******************************************************************************
  * @brief
  *****************************************************************************/
-BaseType_t app_visual_init ( QueueHandle_t* app_visual_handle )
+bool app_visual_init ( QueueHandle_t* app_visual_handle )
 {
-	BaseType_t result = pdFAIL;
+	bool result = false;
 
 	memset ( &app_visual_ctx, 0, sizeof ( APP_VISUAL_CTX ) );
 
-	result = xTaskCreate ( app_visual_heartbeat, "visual_module", configMINIMAL_STACK_SIZE + 200, NULL, APP_VISUAL_PRIORITY, NULL);
+	result = misc_task_create ( app_visual_heartbeat, "visual_module", APP_VISUAL_PRIORITY );
+	if ( result != false )
+	{
+		app_visual_ctx.handle = misc_queue_create ();
 
-	app_visual_ctx.handle = xQueueCreate ( 2, sizeof (APP_MSG) );
+		*app_visual_handle = app_visual_ctx.handle;
 
-	*app_visual_handle = app_visual_ctx.handle;
-
-	lib_led_mb_init();
+		lib_led_mb_init();
+	}
 
 	return result;
 }
@@ -155,3 +132,5 @@ void app_visual_mb_boost ( void )
 
 	app_visual_ctx.next_period = APP_VISUAL_BLINK_RUN_MS / 10;
 }
+
+
