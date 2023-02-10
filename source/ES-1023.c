@@ -57,7 +57,8 @@
 /*******************************************************************************
  * @brief Global
  ******************************************************************************/
-uint8_t ES_1023_status = 0;
+QueueHandle_t app_visual_handle   = NULL;
+QueueHandle_t app_operator_handle = NULL;
 
 /*******************************************************************************
  * @brief Prototypes
@@ -79,6 +80,8 @@ int main ( void )
 
     EMS_task_manager ();
 
+    app_operator_set_visual_queue ( app_visual_handle );
+
 	vTaskStartScheduler ();
 
 	while (1)
@@ -96,9 +99,9 @@ void EMS_task_manager ( void )
 {
 	BaseType_t result = pdFAIL;
 
-	result = app_visual_init ();
+	result = app_visual_init ( &app_visual_handle );
 
-	if ( pdPASS == result ) result = app_operator_init ();
+	if ( pdPASS == result ) result = app_operator_init ( &app_operator_handle );
 
 	if ( result != pdPASS )
 	{
@@ -107,6 +110,4 @@ void EMS_task_manager ( void )
 			;
 		}
 	}
-
-	ES_1023_status = 1;
 }

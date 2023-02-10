@@ -9,12 +9,15 @@
 #ifndef APP_VISUAL_H_
 #define APP_VISUAL_H_
 
+#include "queue.h"
+
 #include "../lib/lib_led_mb.h"
 
-extern uint8_t ES_1023_status;
+BaseType_t  app_visual_init     ( QueueHandle_t* app_visual_handle );
 
-BaseType_t  app_visual_init     ( void );
 void 		app_visual_mb_run   ( void );
 void 		app_visual_mb_error ( void );
+void        app_visual_mb_power ( void );
+void        app_visual_mb_boost ( void );
 
 #endif /* APP_VISUAL_H_ */
