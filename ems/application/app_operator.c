@@ -29,7 +29,8 @@ static void app_operator_heartbeat ( void *pvParameters )
 	// Enable pairing
 	lib_device_bt_pairing_on_off ( true );
 
-	// TODO : add tick monitoring to stop pairing
+	// Take tick reference for timeout pairing
+	app_operator_ctx.pairing_since = xTaskGetTickCount ( );
 
 	while (1)
 	{
@@ -51,6 +52,12 @@ static void app_operator_heartbeat ( void *pvParameters )
 		{
 			// PAIRING
 			app_operator_ctx.status.in_use = 1;
+
+			if ( ( xTaskGetTickCount ( ) - app_operator_ctx.pairing_since ) > APP_OPERATOR_PAIR_TIMEOUT_MS )
+			{
+				// Abort pairing because of timeout
+				lib_device_bt_pairing_on_off ( false );
+			}
 		}
 		else
 		{

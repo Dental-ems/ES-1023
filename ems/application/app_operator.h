@@ -13,8 +13,9 @@
 
 #include "misc.h"
 
-#define APP_OPERATOR_PRIORITY      1U
-#define APP_OPERATOR_LOOP_RUN_MS   100U
+#define APP_OPERATOR_PRIORITY         1U
+#define APP_OPERATOR_LOOP_RUN_MS      100U
+#define APP_OPERATOR_PAIR_TIMEOUT_MS  (3*60000U)
 
 typedef struct
 {
@@ -28,6 +29,7 @@ typedef struct
 	information 	command;
 	information 	status;
 	QueueHandle_t 	visual_handle;
+	TickType_t 	    pairing_since;
 } APP_OPERATOR_CTX;
 
 bool  app_operator_init 		 	 ( QueueHandle_t* app_operator_handle );
