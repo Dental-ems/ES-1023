@@ -40,6 +40,7 @@ void drv_io_init ( void )
 		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_S2_PORT );
 		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_P1_PORT );
 		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_P2_PORT );
+		GPIO_PortInit ( GPIO, BOARD_INITPINS_UART_SAT_DE_GPIO );
 #endif
 
 		// Port masking

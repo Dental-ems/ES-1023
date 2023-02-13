@@ -13,8 +13,8 @@
 
 #include "misc.h"
 
-#define APP_SATELLITE_PRIORITY 	   	2U
-#define APP_SATELLITE_PERIOD_MS		1000U
+#define APP_SATELLITE_PRIORITY 	   	3U
+#define APP_SATELLITE_PERIOD_MS		(10*1000U)
 
 typedef struct
 {

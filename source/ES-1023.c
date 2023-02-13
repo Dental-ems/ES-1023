@@ -34,7 +34,8 @@
  *
  * @author  Damien Cardinale
  * @email   dcardinale@ems-ch.ch
- * @date    08.02.2023
+ *
+ * @date    08 february 2023
  *******************************************************************************/
 #include <stdio.h>
 
@@ -77,11 +78,10 @@ int main ( void )
     POWER_SetBodVbatLevel ( kPOWER_BodVbatLevel1650mv, kPOWER_BodHystLevel50mv, false );
 
     // Init board hardware
-    BOARD_BootClockFRO12M ();
+    BOARD_InitBootClocks();
     BOARD_InitBootPeripherals ();
 
     EMS_task_manager ();
-
     app_operator_set_visual_queue ( app_visual_handle );
 
 	vTaskStartScheduler ();

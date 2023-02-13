@@ -27,6 +27,12 @@ void BOARD_InitBootPins(void);
 
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_20_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 7. */
+#define PIO0_20_FUNC_ALT7 0x07u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_10_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Selects pin function.: Alternative connection 0. */
@@ -43,6 +49,12 @@ void BOARD_InitBootPins(void);
 /*!
  * @brief Selects pin function.: Alternative connection 0. */
 #define PIO1_14_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_17_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO1_17_FUNC_ALT0 0x00u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_20_DIGIMODE_DIGITAL 0x01u
@@ -82,6 +94,12 @@ void BOARD_InitBootPins(void);
  * Inactive (no pull-down/pull-up resistor enabled).
  */
 #define PIO1_24_MODE_INACTIVE 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO1_30_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 1. */
+#define PIO1_30_FUNC_ALT1 0x01u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_5_DIGIMODE_DIGITAL 0x01u
@@ -200,6 +218,31 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_BTM_IT_P2_PIN 14U                   /*!<@brief PORT pin number */
 #define BOARD_INITPINS_BTM_IT_P2_PIN_MASK (1U << 14U)      /*!<@brief PORT pin mask */
                                                            /* @} */
+
+/*! @name PIO0_20 (number 74), UART_SAT_RX
+  @{ */
+#define BOARD_INITPINS_UART_SAT_RX_PORT 0U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_UART_SAT_RX_PIN 20U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_UART_SAT_RX_PIN_MASK (1U << 20U)      /*!<@brief PORT pin mask */
+                                                             /* @} */
+
+/*! @name PIO1_30 (number 65), UART_SAT_TX
+  @{ */
+#define BOARD_INITPINS_UART_SAT_TX_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_UART_SAT_TX_PIN 30U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_UART_SAT_TX_PIN_MASK (1U << 30U)      /*!<@brief PORT pin mask */
+                                                             /* @} */
+
+/*! @name PIO1_17 (number 43), UART_SAT_DE
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_UART_SAT_DE_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_UART_SAT_DE_GPIO_PIN_MASK (1U << 17U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_UART_SAT_DE_PORT 1U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_UART_SAT_DE_PIN 17U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_UART_SAT_DE_PIN_MASK (1U << 17U)      /*!<@brief PORT pin mask */
+                                                             /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

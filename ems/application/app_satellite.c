@@ -17,15 +17,20 @@
 /*******************************************************************************
  * @brief Variables
  ******************************************************************************/
-APP_SATELLITE_CTX app_satellite_ctx;
+static APP_SATELLITE_CTX app_satellite_ctx;
 
 /******************************************************************************
  * @brief
  *****************************************************************************/
 static void app_satellite_heartbeat ( void *pvParameters )
 {
+	uint8_t satelline_in[LIB_REMOTE_AF_TRAME_LEN_BYTES * 2U]  = {0};
+	uint8_t satelline_out[LIB_REMOTE_AF_TRAME_LEN_BYTES + 1U] = {0};
+
 	while (1)
 	{
+		lib_remote_af_exchange ( satelline_in, satelline_out );
+
 		vTaskDelay ( APP_SATELLITE_PERIOD_MS );
 	}
 }

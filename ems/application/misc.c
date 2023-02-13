@@ -39,6 +39,7 @@ bool misc_get_msg ( QueueHandle_t handle_dest, MISC_MSG_BODY* msg_body )
 
 	if ( handle_dest != NULL )
 	{
+		// TODO : move it to under IRQ !
 		result = xQueueReceive ( handle_dest, msg_body, ( TickType_t ) 0 );
 	}
 
