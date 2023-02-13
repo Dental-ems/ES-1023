@@ -49,6 +49,7 @@
 
 #include "../ems/application/app_visual.h"
 #include "../ems/application/app_operator.h"
+#include "../ems/application/app_satellite.h"
 
 /*******************************************************************************
  * @brief Constants
@@ -57,8 +58,9 @@
 /*******************************************************************************
  * @brief Global
  ******************************************************************************/
-QueueHandle_t app_visual_handle   = NULL;
-QueueHandle_t app_operator_handle = NULL;
+QueueHandle_t app_visual_handle    = NULL;
+QueueHandle_t app_operator_handle  = NULL;
+QueueHandle_t app_satellite_handle = NULL;
 
 /*******************************************************************************
  * @brief Prototypes
@@ -102,6 +104,8 @@ void EMS_task_manager ( void )
 	result = app_visual_init ( &app_visual_handle );
 
 	if ( pdPASS == result ) result = app_operator_init ( &app_operator_handle );
+
+	if ( pdPASS == result ) result = app_satellite_init ( &app_satellite_handle );
 
 	if ( result != pdPASS )
 	{

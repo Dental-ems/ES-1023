@@ -10,6 +10,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "app_visual.h"
 
@@ -132,5 +133,3 @@ void app_visual_mb_boost ( void )
 
 	app_visual_ctx.next_period = APP_VISUAL_BLINK_RUN_MS / 10;
 }
-
-
