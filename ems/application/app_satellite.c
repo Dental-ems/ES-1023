@@ -24,14 +24,40 @@ static APP_SATELLITE_CTX app_satellite_ctx;
  *****************************************************************************/
 static void app_satellite_heartbeat ( void *pvParameters )
 {
-	uint8_t satelline_in[LIB_REMOTE_AF_TRAME_LEN_BYTES * 2U]  = {0};
-	uint8_t satelline_out[LIB_REMOTE_AF_TRAME_LEN_BYTES + 1U] = {0};
-
 	while (1)
 	{
-		lib_remote_af_exchange ( satelline_in, satelline_out );
+		app_satellite_update_encoder_af ();
 
 		vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+	}
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_update_encoder_af ( void )
+{
+	uint8_t satelline_buffer_in[LIB_REMOTE_AF_TRAME_LEN_REQ];
+	uint8_t satelline_buffer_out[LIB_REMOTE_AF_TRAME_LEN_RESP];
+	LIB_REMOTE_AF_LL_REQ  msg_to_airflow;
+	LIB_REMOTE_AF_LL_RESP msg_from_airflow;
+
+	// Message to get encoder from airflow
+	msg_to_airflow.header.slave_addr   = DRV_BUS_ADDR_SLAVE_AF;
+	msg_to_airflow.header.request_type = LIB_REMOTE_AF_REQ_ENCODER;
+
+	if ( true == lib_remote_af_encode ( &msg_to_airflow, LIB_REMOTE_AF_TRAME_VERSION_01 ) )
+	{
+		memcpy ( &msg_to_airflow, satelline_buffer_in, LIB_REMOTE_AF_TRAME_LEN_REQ );
+
+		lib_remote_af_exchange ( satelline_buffer_in, satelline_buffer_out );
+
+		memcpy ( satelline_buffer_out, &msg_from_airflow, LIB_REMOTE_AF_TRAME_LEN_RESP );
+
+		if ( true == lib_remote_af_decode ( &msg_from_airflow ) )
+		{
+			app_satellite_ctx.airflow.encoder = lib_remote_af_extract_encoder ( msg_from_airflow.data );
+		}
 	}
 }
 

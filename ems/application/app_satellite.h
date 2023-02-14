@@ -14,13 +14,15 @@
 #include "misc.h"
 
 #define APP_SATELLITE_PRIORITY 	   	3U
-#define APP_SATELLITE_PERIOD_MS		(10*1000U)
+#define APP_SATELLITE_PERIOD_MS		(5*1000U)
 
 typedef struct
 {
-	QueueHandle_t 	handle;
+	QueueHandle_t 	   handle;
+	LIB_REMOTE_AF_ITEM airflow;
 } APP_SATELLITE_CTX;
 
-bool app_satellite_init ( QueueHandle_t* app_satellite_handle );
+bool app_satellite_init 			 ( QueueHandle_t* app_satellite_handle );
+void app_satellite_update_encoder_af ( void );
 
 #endif /* APP_SATELLITE_H_ */
