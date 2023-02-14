@@ -59,11 +59,6 @@ typedef struct
 
 typedef struct
 {
-	uint32_t encoder;
-} LIB_REMOTE_AF_ITEM;
-
-typedef struct
-{
 	bool 	flag_transmit;
 	bool 	flag_receive;
 } LIB_REMOTE_AF_CTX;

@@ -28,6 +28,15 @@ static void app_satellite_heartbeat ( void *pvParameters )
 	{
 		app_satellite_update_encoder_af ();
 
+		if ( false == app_satellite_ctx.airflow.encoder.has_ref )
+		{
+			app_satellite_take_step_reference ();
+		}
+		else
+		{
+			app_satellite_compute_water_setting ();
+		}
+
 		vTaskDelay ( APP_SATELLITE_PERIOD_MS );
 	}
 }
@@ -56,7 +65,68 @@ void app_satellite_update_encoder_af ( void )
 
 		if ( true == lib_remote_af_decode ( &msg_from_airflow ) )
 		{
-			app_satellite_ctx.airflow.encoder = lib_remote_af_extract_encoder ( msg_from_airflow.data );
+			app_satellite_ctx.airflow.encoder.raw = lib_remote_af_extract_encoder ( msg_from_airflow.data );
+
+			if ( app_satellite_ctx.airflow.encoder.raw > APP_SATELLITE_STEP_TOL )
+			{
+				app_satellite_ctx.airflow.encoder.cpt++;
+			}
+		}
+	}
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_compute_water_setting ( void )
+{
+	app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_UNDEF;
+
+	if ( app_satellite_ctx.airflow.encoder.raw <= app_satellite_ctx.airflow.encoder.low )
+	{
+		app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_LOW;
+	}
+
+	if ( app_satellite_ctx.airflow.encoder.raw >= ( app_satellite_ctx.airflow.encoder.step1 - APP_SATELLITE_STEP_TOL ) )
+	{
+		app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_01;
+	}
+
+	if ( app_satellite_ctx.airflow.encoder.raw >= ( app_satellite_ctx.airflow.encoder.step2 - APP_SATELLITE_STEP_TOL ) )
+	{
+		app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_02;
+	}
+
+	if ( app_satellite_ctx.airflow.encoder.raw >= ( app_satellite_ctx.airflow.encoder.step3 - APP_SATELLITE_STEP_TOL ) )
+	{
+		app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_03;
+	}
+
+	if ( app_satellite_ctx.airflow.encoder.raw >= app_satellite_ctx.airflow.encoder.high )
+	{
+		app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_HIGH;
+	}
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_take_step_reference ( void )
+{
+	if ( app_satellite_ctx.airflow.encoder.cpt > APP_SATELLITE_NB_READ_FOR_REF )
+	{
+		if ( ( app_satellite_ctx.airflow.encoder.raw > APP_SATELLITE_STEP_REF_MIN ) && ( app_satellite_ctx.airflow.encoder.raw < APP_SATELLITE_STEP_REF_MAX ) )
+		{
+			// Compute step references for water settings
+			app_satellite_ctx.airflow.encoder.step3 = app_satellite_ctx.airflow.encoder.raw;
+			app_satellite_ctx.airflow.encoder.step2 = app_satellite_ctx.airflow.encoder.step3 - APP_SATELLITE_STEP_DELTA;
+			app_satellite_ctx.airflow.encoder.step1 = app_satellite_ctx.airflow.encoder.step2 - APP_SATELLITE_STEP_DELTA;
+
+			// Compute limit lower and higher
+			app_satellite_ctx.airflow.encoder.low  = app_satellite_ctx.airflow.encoder.step1 - APP_SATELLITE_STEP_TOL;
+			app_satellite_ctx.airflow.encoder.high = app_satellite_ctx.airflow.encoder.step3 + APP_SATELLITE_STEP_TOL;
+
+			app_satellite_ctx.airflow.encoder.has_ref = true;
 		}
 	}
 }
