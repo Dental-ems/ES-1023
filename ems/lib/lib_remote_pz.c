@@ -45,7 +45,7 @@ void lib_remote_pz_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
     // Start transmitting
 	lib_remote_af_transmit ();
 
-	// Send to Airflow slave
+	// Send to Piezon slave
 	drv_bus_send_to_slave ( DRV_BUS_ADDR_SLAVE_PZ );
 
 	// Close transmitter
@@ -127,4 +127,30 @@ void lib_remote_pz_callback ( USART_Type *base, usart_handle_t *handle, status_t
     {
     	lib_remote_pz_ctx.flag_receive = true;
     }
+}
+
+/*******************************************************************************
+ * @brief
+ ******************************************************************************/
+bool lib_remote_pz_request ( uint8_t req_type, LIB_REMOTE_PZ_LL_REQ* msg_req, LIB_REMOTE_PZ_LL_RESP* msg_resp )
+{
+	bool    result = false;
+	uint8_t buffer_in[LIB_REMOTE_PZ_TRAME_LEN_REQ];
+	uint8_t buffer_out[LIB_REMOTE_PZ_TRAME_LEN_RESP];
+
+	msg_req->header.slave_addr   = DRV_BUS_ADDR_SLAVE_PZ;
+	msg_req->header.request_type = req_type;
+
+	if ( true == lib_remote_pz_encode ( msg_req, LIB_REMOTE_PZ_TRAME_VERSION_01 ) )
+	{
+		memcpy ( msg_req, buffer_in, LIB_REMOTE_PZ_TRAME_LEN_REQ );
+
+		lib_remote_pz_exchange ( buffer_in, buffer_out );
+
+		memcpy ( buffer_out, msg_resp, LIB_REMOTE_PZ_TRAME_LEN_RESP );
+
+		result = lib_remote_pz_decode ( msg_resp );
+	}
+
+	return result;
 }

@@ -72,5 +72,6 @@ bool    lib_remote_af_decode 	      ( LIB_REMOTE_AF_LL_RESP* msg_to_decode );
 uint8_t lib_remote_af_checksum        ( LIB_REMOTE_AF_LL_HEADER header_to_checksum );
 uint8_t lib_remote_af_extract_encoder ( uint8_t* data );
 void    lib_remote_af_callback  	  ( USART_Type *base, usart_handle_t *handle, status_t status, void *user_data );
+bool    lib_remote_af_request 		  ( uint8_t req_type, LIB_REMOTE_AF_LL_REQ* msg_req, LIB_REMOTE_AF_LL_RESP* msg_resp );
 
 #endif /* LIB_REMOTE_AF_H_ */

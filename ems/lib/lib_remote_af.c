@@ -190,3 +190,29 @@ void lib_remote_af_callback ( USART_Type *base, usart_handle_t *handle, status_t
     	lib_remote_af_ctx.flag_receive = true;
     }
 }
+
+/*******************************************************************************
+ * @brief
+ ******************************************************************************/
+bool lib_remote_af_request ( uint8_t req_type, LIB_REMOTE_AF_LL_REQ* msg_req, LIB_REMOTE_AF_LL_RESP* msg_resp )
+{
+	bool    result = false;
+	uint8_t buffer_in[LIB_REMOTE_AF_TRAME_LEN_REQ];
+	uint8_t buffer_out[LIB_REMOTE_AF_TRAME_LEN_RESP];
+
+	msg_req->header.slave_addr   = DRV_BUS_ADDR_SLAVE_AF;
+	msg_req->header.request_type = req_type;
+
+	if ( true == lib_remote_af_encode ( msg_req, LIB_REMOTE_AF_TRAME_VERSION_01 ) )
+	{
+		memcpy ( msg_req, buffer_in, LIB_REMOTE_AF_TRAME_LEN_REQ );
+
+		lib_remote_af_exchange ( buffer_in, buffer_out );
+
+		memcpy ( buffer_out, msg_resp, LIB_REMOTE_AF_TRAME_LEN_RESP );
+
+		result = lib_remote_af_decode ( msg_resp );
+	}
+
+	return result;
+}

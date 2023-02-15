@@ -15,7 +15,7 @@
 #define LIB_REMOTE_PZ_TRAME_LEN_RESP LIB_REMOTE_AF_TRAME_LEN_REQ
 #define LIB_REMOTE_PZ_TRAME_LEN_REQ  LIB_REMOTE_AF_TRAME_LEN_RESP
 
-#define LIB_REMOTE_PZ_TRAME_EOF LIB_REMOTE_PZ_TRAME_EOF
+#define LIB_REMOTE_PZ_TRAME_EOF 	 LIB_REMOTE_PZ_TRAME_EOF
 #define LIB_REMOTE_PZ_TRAME_CHECKSUM LIB_REMOTE_AF_TRAME_CHECKSUM
 
 #define LIB_REMOTE_PZ_TRAME_VERSION_01 0x01
@@ -47,5 +47,6 @@ bool    lib_remote_pz_decode 	      ( LIB_REMOTE_PZ_LL_RESP* msg_to_decode );
 uint8_t lib_remote_pz_checksum        ( LIB_REMOTE_PZ_LL_HEADER header_to_checksum );
 uint8_t lib_remote_pz_extract_encoder ( uint8_t* data );
 void    lib_remote_pz_callback  	  ( USART_Type *base, usart_handle_t *handle, status_t status, void *user_data );
+bool    lib_remote_pz_request 		  ( uint8_t req_type, LIB_REMOTE_PZ_LL_REQ* msg_req, LIB_REMOTE_PZ_LL_RESP* msg_resp );
 
 #endif /* LIB_REMOTE_PZ_H_ */

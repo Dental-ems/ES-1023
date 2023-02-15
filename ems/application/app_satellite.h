@@ -10,6 +10,7 @@
 #define APP_SATELLITE_H_
 
 #include "../lib/lib_remote_af.h"
+#include "../lib/lib_remote_pz.h"
 
 #include "misc.h"
 
@@ -54,13 +55,17 @@ typedef struct
 
 typedef struct
 {
-	QueueHandle_t 	   	  handle;
+	QueueHandle_t 	   handle;
 	APP_SATELLITE_ITEM airflow;
+	APP_SATELLITE_ITEM piezon;
 } APP_SATELLITE_CTX;
 
-bool app_satellite_init 			     ( QueueHandle_t* app_satellite_handle );
-void app_satellite_update_encoder_af     ( void );
-void app_satellite_take_step_reference   ( void );
-void app_satellite_compute_water_setting ( void );
+bool app_satellite_init 			        ( QueueHandle_t* app_satellite_handle );
+void app_satellite_update_encoder_af        ( void );
+void app_satellite_update_encoder_pz        ( void );
+void app_satellite_take_step_reference_af   ( void );
+void app_satellite_take_step_reference_pz   ( void );
+void app_satellite_compute_water_setting_af ( void );
+void app_satellite_compute_water_setting_pz ( void );
 
 #endif /* APP_SATELLITE_H_ */
