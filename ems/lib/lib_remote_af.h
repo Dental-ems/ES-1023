@@ -63,15 +63,14 @@ typedef struct
 	bool 	flag_receive;
 } LIB_REMOTE_AF_CTX;
 
-void lib_remote_af_init 	          ( void );
-void lib_remote_af_exchange           ( uint8_t* data_buf_req, uint8_t* data_buf_resp );
-void lib_remote_af_transmit           ( void );
-void lib_remote_af_receive 	          ( void );
-bool lib_remote_af_encode 	          ( LIB_REMOTE_AF_LL_REQ*  msg_to_encode, uint8_t version );
-bool lib_remote_af_decode 	          ( LIB_REMOTE_AF_LL_RESP* msg_to_decode );
+void    lib_remote_af_init 	          ( void );
+void    lib_remote_af_exchange        ( uint8_t* data_buf_req, uint8_t* data_buf_resp );
+void    lib_remote_af_transmit        ( void );
+void    lib_remote_af_receive 	      ( void );
+bool    lib_remote_af_encode 	      ( LIB_REMOTE_AF_LL_REQ*  msg_to_encode, uint8_t version );
+bool    lib_remote_af_decode 	      ( LIB_REMOTE_AF_LL_RESP* msg_to_decode );
 uint8_t lib_remote_af_checksum        ( LIB_REMOTE_AF_LL_HEADER header_to_checksum );
 uint8_t lib_remote_af_extract_encoder ( uint8_t* data );
-
-void lib_remote_af_callback  ( USART_Type *base, usart_handle_t *handle, status_t status, void *userData );
+void    lib_remote_af_callback  	  ( USART_Type *base, usart_handle_t *handle, status_t status, void *user_data );
 
 #endif /* LIB_REMOTE_AF_H_ */

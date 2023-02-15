@@ -12,6 +12,8 @@
 #include "fsl_usart.h"
 
 #define DRV_BUS_ADDR_MASTER       0x03
+
+#define DRV_BUS_ADDR_SLAVE_PZ     0x81
 #define DRV_BUS_ADDR_SLAVE_AF     0x82
 
 #define DRV_BUS_UART_ID			  USART1

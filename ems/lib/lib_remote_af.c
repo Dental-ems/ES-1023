@@ -60,6 +60,9 @@ void lib_remote_af_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
  *****************************************************************************/
 void lib_remote_af_transmit ( void )
 {
+	// TODO : remove blocking procedure
+	// tip : use freertos peripheral option
+
     while ( lib_remote_af_ctx.flag_transmit == false ) { }
 
     lib_remote_af_ctx.flag_transmit = false;
@@ -70,6 +73,9 @@ void lib_remote_af_transmit ( void )
  *****************************************************************************/
 void lib_remote_af_receive ( void )
 {
+	// TODO : remove blocking procedure
+	// tip : use freertos peripheral option
+
     while ( lib_remote_af_ctx.flag_receive == false ) { }
 
     lib_remote_af_ctx.flag_receive = false;
@@ -172,7 +178,7 @@ uint8_t lib_remote_af_checksum ( LIB_REMOTE_AF_LL_HEADER header_to_checksum )
 /*******************************************************************************
  * @brief
  ******************************************************************************/
-void lib_remote_af_callback ( USART_Type *base, usart_handle_t *handle, status_t status, void *userData )
+void lib_remote_af_callback ( USART_Type *base, usart_handle_t *handle, status_t status, void *user_data )
 {
     if ( kStatus_USART_TxIdle == status )
     {
