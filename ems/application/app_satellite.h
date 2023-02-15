@@ -47,7 +47,16 @@ typedef struct
 
 typedef struct
 {
+    uint32_t cpt;
+    uint8_t  status;
+    uint8_t  conn;
+    uint8_t  rfid;
+} APP_SATELLITE_HOLDER;
+
+typedef struct
+{
     APP_SATELLITE_ENCODER encoder;
+    APP_SATELLITE_HOLDER  holder;
     uint8_t               water_in_use;
 } APP_SATELLITE_ITEM;
 
@@ -61,6 +70,8 @@ typedef struct
 bool app_satellite_init                     ( QueueHandle_t* app_satellite_handle );
 void app_satellite_update_encoder_af        ( void );
 void app_satellite_update_encoder_pz        ( void );
+void app_satellite_update_holder_af         ( void );
+void app_satellite_update_holder_pz         ( void );
 void app_satellite_take_step_reference_af   ( void );
 void app_satellite_take_step_reference_pz   ( void );
 void app_satellite_compute_water_setting_af ( void );

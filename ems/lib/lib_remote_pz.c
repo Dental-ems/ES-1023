@@ -43,7 +43,7 @@ void lib_remote_pz_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
     drv_bus_transmit_run ( data_buf_req, LIB_REMOTE_PZ_TRAME_LEN_REQ );
 
     // Start transmitting
-    lib_remote_af_transmit ();
+    lib_remote_pz_transmit ();
 
     // Send to Piezon slave
     drv_bus_send_to_slave ( DRV_BUS_ADDR_SLAVE_PZ );
@@ -52,7 +52,7 @@ void lib_remote_pz_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
     drv_bus_transmit_end ();
 
     // Waiting for response
-    lib_remote_af_receive ();
+    lib_remote_pz_receive ();
 }
 
 /******************************************************************************
@@ -103,6 +103,30 @@ bool lib_remote_pz_decode ( LIB_REMOTE_PZ_LL_RESP* msg_to_decode )
 uint8_t lib_remote_pz_extract_encoder ( uint8_t* data )
 {
     return lib_remote_af_extract_encoder ( data );
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+uint8_t lib_remote_pz_extract_holder_status ( uint8_t* data )
+{
+    return lib_remote_af_extract_holder_status ( data );
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+uint8_t lib_remote_pz_extract_holder_conn ( uint8_t* data )
+{
+    return lib_remote_af_extract_holder_conn ( data );
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+uint8_t lib_remote_pz_extract_holder_rfid ( uint8_t* data )
+{
+    return lib_remote_af_extract_holder_rfid ( data );
 }
 
 /******************************************************************************

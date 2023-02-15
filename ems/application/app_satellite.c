@@ -36,6 +36,8 @@ static void app_satellite_heartbeat ( void *pvParameters )
         else
         {
             app_satellite_compute_water_setting_af ();
+
+            app_satellite_update_holder_af ();
         }
 
         // Piezon management
@@ -48,6 +50,8 @@ static void app_satellite_heartbeat ( void *pvParameters )
         else
         {
             app_satellite_compute_water_setting_pz ();
+
+            app_satellite_update_holder_pz ();
         }
 
         vTaskDelay ( APP_SATELLITE_PERIOD_MS );
@@ -76,6 +80,27 @@ void app_satellite_update_encoder_af ( void )
 /******************************************************************************
  * @brief
  *****************************************************************************/
+void app_satellite_update_holder_af ( void )
+{
+    LIB_REMOTE_AF_LL_REQ  msg_to_airflow;
+    LIB_REMOTE_AF_LL_RESP msg_from_airflow;
+
+    if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_HOLDER, &msg_to_airflow, &msg_from_airflow ) )
+    {
+        app_satellite_ctx.airflow.holder.status = lib_remote_af_extract_holder_status ( msg_from_airflow.data );
+        app_satellite_ctx.airflow.holder.conn   = lib_remote_af_extract_holder_conn   ( msg_from_airflow.data );
+        app_satellite_ctx.airflow.holder.rfid   = lib_remote_af_extract_holder_rfid   ( msg_from_airflow.data );
+
+        if ( app_satellite_ctx.airflow.holder.status > LIB_REMOTE_AF_HOLDER_UNDEF )
+        {
+            app_satellite_ctx.airflow.encoder.cpt++;
+        }
+    }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
 void app_satellite_update_encoder_pz ( void )
 {
     LIB_REMOTE_PZ_LL_REQ  msg_to_piezon;
@@ -86,6 +111,27 @@ void app_satellite_update_encoder_pz ( void )
         app_satellite_ctx.piezon.encoder.raw = lib_remote_pz_extract_encoder ( msg_from_piezon.data );
 
         if ( app_satellite_ctx.piezon.encoder.raw > APP_SATELLITE_STEP_TOL )
+        {
+            app_satellite_ctx.piezon.encoder.cpt++;
+        }
+    }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_update_holder_pz ( void )
+{
+    LIB_REMOTE_PZ_LL_REQ  msg_to_piezon;
+    LIB_REMOTE_PZ_LL_RESP msg_from_piezon;
+
+    if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_HOLDER, &msg_to_piezon, &msg_from_piezon ) )
+    {
+        app_satellite_ctx.piezon.holder.status = lib_remote_pz_extract_holder_status ( msg_from_piezon.data );
+        app_satellite_ctx.piezon.holder.conn   = lib_remote_pz_extract_holder_conn   ( msg_from_piezon.data );
+        app_satellite_ctx.piezon.holder.rfid   = lib_remote_pz_extract_holder_rfid   ( msg_from_piezon.data );
+
+        if ( app_satellite_ctx.piezon.holder.status > LIB_REMOTE_AF_HOLDER_UNDEF )
         {
             app_satellite_ctx.piezon.encoder.cpt++;
         }

@@ -122,18 +122,21 @@ bool lib_remote_af_decode ( LIB_REMOTE_AF_LL_RESP* msg_to_decode )
     {
         if ( LIB_REMOTE_AF_TRAME_VERSION_01 == msg_to_decode->header.protocol_version )
         {
-            if ( ( msg_to_decode->header.slave_addr > 0 ) && ( msg_to_decode->header.master_addr > 0 ) )
+            if ( LIB_REMOTE_AF_RESULT_ACK == msg_to_decode->result )
             {
-                // Switch because of response with same header
-                uint8_t temp = msg_to_decode->header.slave_addr;
-                msg_to_decode->header.slave_addr  = msg_to_decode->header.master_addr;
-                msg_to_decode->header.master_addr = temp;
-
-                if ( ( msg_to_decode->header.request_type > LIB_REMOTE_AF_REQ_UNDEF ) && ( msg_to_decode->header.request_type < LIB_REMOTE_AF_REQ_MAX ) )
+                if ( ( msg_to_decode->header.slave_addr > 0 ) && ( msg_to_decode->header.master_addr > 0 ) )
                 {
-                    if ( lib_remote_af_checksum ( msg_to_decode->header ) == msg_to_decode->checksum )
+                    // Switch because of response with same header
+                    uint8_t temp = msg_to_decode->header.slave_addr;
+                    msg_to_decode->header.slave_addr  = msg_to_decode->header.master_addr;
+                    msg_to_decode->header.master_addr = temp;
+
+                    if ( ( msg_to_decode->header.request_type > LIB_REMOTE_AF_REQ_UNDEF ) && ( msg_to_decode->header.request_type < LIB_REMOTE_AF_REQ_MAX ) )
                     {
-                        result = true;
+                        if ( lib_remote_af_checksum ( msg_to_decode->header ) == msg_to_decode->checksum )
+                        {
+                            result = true;
+                        }
                     }
                 }
             }
@@ -156,6 +159,30 @@ uint8_t lib_remote_af_extract_encoder ( uint8_t* data )
     value += data[0];
 
     return value;
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+uint8_t lib_remote_af_extract_holder_status ( uint8_t* data )
+{
+    return ( LIB_REMOTE_AF_HOLDER_HOOKED >> data[0] );
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+uint8_t lib_remote_af_extract_holder_conn ( uint8_t* data )
+{
+    return ( LIB_REMOTE_AF_HOLDER_CONNECTED >> data[1] );
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+uint8_t lib_remote_af_extract_holder_rfid ( uint8_t* data )
+{
+    return ( LIB_REMOTE_AF_HOLDER_DETECTED >> data[2] );
 }
 
 /******************************************************************************
