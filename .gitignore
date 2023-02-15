@@ -8,3 +8,5 @@
 *.ld
 
 Debug/
+
+*.launch
