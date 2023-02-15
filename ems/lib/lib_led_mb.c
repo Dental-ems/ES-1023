@@ -18,9 +18,9 @@
  ******************************************************************************/
 void lib_led_mb_init ( void )
 {
-	drv_io_led_main_init ();
+    drv_io_led_main_init ();
 
-	lib_led_mb_enable();
+    lib_led_mb_enable();
 }
 
 /******************************************************************************
@@ -28,7 +28,7 @@ void lib_led_mb_init ( void )
  ******************************************************************************/
 void lib_led_mb_toogle ( void )
 {
-	drv_io_led_main_toogle ();
+    drv_io_led_main_toogle ();
 }
 
 /******************************************************************************
@@ -36,5 +36,5 @@ void lib_led_mb_toogle ( void )
  ******************************************************************************/
 void lib_led_mb_enable ( void )
 {
-	drv_io_led_main_high ();
+    drv_io_led_main_high ();
 }

@@ -23,32 +23,32 @@ static bool drv_io_is_ready = false;
  *****************************************************************************/
 void drv_io_init ( void )
 {
-	if ( false == drv_io_is_ready )
-	{
-		// enable clock for GPIO
-		CLOCK_EnableClock ( kCLOCK_Gpio0 );
-		CLOCK_EnableClock ( kCLOCK_Gpio1 );
+    if ( false == drv_io_is_ready )
+    {
+        // enable clock for GPIO
+        CLOCK_EnableClock ( kCLOCK_Gpio0 );
+        CLOCK_EnableClock ( kCLOCK_Gpio1 );
 
-		BOARD_InitBootPins ();
+        BOARD_InitBootPins ();
 
-		GPIO_PortInit ( GPIO, BOARD_INITPINS_LED_MAIN_PORT );
+        GPIO_PortInit ( GPIO, BOARD_INITPINS_LED_MAIN_PORT );
 
 #if 0 // Ports are all the same
-		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_OFF_PORT );
-		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_PAIRING_PORT );
-		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_S1_PORT );
-		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_S2_PORT );
-		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_P1_PORT );
-		GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_P2_PORT );
-		GPIO_PortInit ( GPIO, BOARD_INITPINS_UART_SAT_DE_GPIO );
+        GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_OFF_PORT );
+        GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_PAIRING_PORT );
+        GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_S1_PORT );
+        GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_S2_PORT );
+        GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_P1_PORT );
+        GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_P2_PORT );
+        GPIO_PortInit ( GPIO, BOARD_INITPINS_UART_SAT_DE_GPIO );
 #endif
 
-		// Port masking
-		//GPIO_PortMaskedSet   ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0x0000FFFF );
-		//GPIO_PortMaskedWrite ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0xFFFFFFFF );
+        // Port masking
+        //GPIO_PortMaskedSet   ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0x0000FFFF );
+        //GPIO_PortMaskedWrite ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0xFFFFFFFF );
 
-		drv_io_is_ready = true;
-	}
+        drv_io_is_ready = true;
+    }
 }
 
 /******************************************************************************
@@ -56,14 +56,14 @@ void drv_io_init ( void )
  *****************************************************************************/
 void drv_io_led_main_init ( void )
 {
-	drv_io_init ();
+    drv_io_init ();
 
     gpio_pin_config_t led_main_cfg = {
         kGPIO_DigitalOutput,
         0,
     };
 
-	GPIO_PinInit ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, &led_main_cfg );
+    GPIO_PinInit ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, &led_main_cfg );
 }
 
 /******************************************************************************
@@ -71,7 +71,7 @@ void drv_io_led_main_init ( void )
  *****************************************************************************/
 void drv_io_btm_init ( CALLBACK_BTM callback_btm_pin_s1, CALLBACK_BTM callback_btm_pin_s2, CALLBACK_BTM callback_btm_pin_p1, CALLBACK_BTM callback_btm_pin_p2 )
 {
-	drv_io_init ();
+    drv_io_init ();
 
     gpio_pin_config_t btm_off_cfg = {
         kGPIO_DigitalOutput,
@@ -88,15 +88,15 @@ void drv_io_btm_init ( CALLBACK_BTM callback_btm_pin_s1, CALLBACK_BTM callback_b
     };
 
     gpio_pin_config_t btm_s2_cfg = {
-    		kGPIO_DigitalInput,
+        kGPIO_DigitalInput,
     };
 
     gpio_pin_config_t btm_p1_cfg = {
-    		kGPIO_DigitalInput,
+        kGPIO_DigitalInput,
     };
 
     gpio_pin_config_t btm_p2_cfg = {
-    		kGPIO_DigitalInput,
+        kGPIO_DigitalInput,
     };
 
     GPIO_PinInit ( GPIO, BOARD_INITPINS_BTM_OFF_PORT, BOARD_INITPINS_BTM_OFF_PIN, &btm_off_cfg );
@@ -129,7 +129,7 @@ void drv_io_btm_init ( CALLBACK_BTM callback_btm_pin_s1, CALLBACK_BTM callback_b
  *****************************************************************************/
 void drv_io_led_main_toogle ( void )
 {
-	GPIO_PortToggle ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 1u << BOARD_INITPINS_LED_MAIN_PIN );
+    GPIO_PortToggle ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 1u << BOARD_INITPINS_LED_MAIN_PIN );
 }
 
 /******************************************************************************
@@ -137,7 +137,7 @@ void drv_io_led_main_toogle ( void )
  *****************************************************************************/
 void drv_io_led_main_high ( void )
 {
-	GPIO_PinWrite ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, 1 );
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, 1 );
 }
 
 /******************************************************************************
@@ -145,7 +145,7 @@ void drv_io_led_main_high ( void )
  *****************************************************************************/
 void drv_io_led_main_low ( void )
 {
-	GPIO_PinWrite ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, 0 );
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, 0 );
 }
 
 /******************************************************************************
@@ -153,7 +153,7 @@ void drv_io_led_main_low ( void )
  *****************************************************************************/
 void drv_io_btm_power_on ( void )
 {
-	GPIO_PinWrite ( GPIO, BOARD_INITPINS_BTM_OFF_PORT, BOARD_INITPINS_BTM_OFF_PIN, 0 );
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_BTM_OFF_PORT, BOARD_INITPINS_BTM_OFF_PIN, 0 );
 }
 
 /******************************************************************************
@@ -161,7 +161,7 @@ void drv_io_btm_power_on ( void )
  *****************************************************************************/
 void drv_io_btm_power_off ( void )
 {
-	GPIO_PinWrite ( GPIO, BOARD_INITPINS_BTM_OFF_PORT, BOARD_INITPINS_BTM_OFF_PIN, 1 );
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_BTM_OFF_PORT, BOARD_INITPINS_BTM_OFF_PIN, 1 );
 }
 
 /******************************************************************************
@@ -169,7 +169,7 @@ void drv_io_btm_power_off ( void )
  *****************************************************************************/
 void drv_io_btm_pairing_on ( void )
 {
-	GPIO_PinWrite ( GPIO, BOARD_INITPINS_BTM_PAIRING_PORT, BOARD_INITPINS_BTM_PAIRING_PIN, 1 );
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_BTM_PAIRING_PORT, BOARD_INITPINS_BTM_PAIRING_PIN, 1 );
 }
 
 /******************************************************************************
@@ -177,7 +177,7 @@ void drv_io_btm_pairing_on ( void )
  *****************************************************************************/
 void drv_io_btm_pairing_off ( void )
 {
-	GPIO_PinWrite ( GPIO, BOARD_INITPINS_BTM_PAIRING_PORT, BOARD_INITPINS_BTM_PAIRING_PIN, 0 );
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_BTM_PAIRING_PORT, BOARD_INITPINS_BTM_PAIRING_PIN, 0 );
 }
 
 /******************************************************************************
@@ -185,7 +185,7 @@ void drv_io_btm_pairing_off ( void )
  *****************************************************************************/
 uint8_t drv_io_btm_get_s1 ( void )
 {
-	return (uint8_t)GPIO_PinRead ( GPIO, BOARD_INITPINS_BTM_S1_PORT, BOARD_INITPINS_BTM_S1_PIN );
+    return (uint8_t)GPIO_PinRead ( GPIO, BOARD_INITPINS_BTM_S1_PORT, BOARD_INITPINS_BTM_S1_PIN );
 }
 
 /******************************************************************************
@@ -193,7 +193,7 @@ uint8_t drv_io_btm_get_s1 ( void )
  *****************************************************************************/
 uint8_t drv_io_btm_get_s2 ( void )
 {
-	return (uint8_t)GPIO_PinRead ( GPIO, BOARD_INITPINS_BTM_S2_PORT, BOARD_INITPINS_BTM_S2_PIN );
+    return (uint8_t)GPIO_PinRead ( GPIO, BOARD_INITPINS_BTM_S2_PORT, BOARD_INITPINS_BTM_S2_PIN );
 }
 
 /******************************************************************************
@@ -201,7 +201,7 @@ uint8_t drv_io_btm_get_s2 ( void )
  *****************************************************************************/
 uint8_t drv_io_btm_get_p1 ( void )
 {
-	return (uint8_t)GPIO_PinRead ( GPIO, BOARD_INITPINS_BTM_P1_PORT, BOARD_INITPINS_BTM_P1_PIN );
+    return (uint8_t)GPIO_PinRead ( GPIO, BOARD_INITPINS_BTM_P1_PORT, BOARD_INITPINS_BTM_P1_PIN );
 }
 
 /******************************************************************************
@@ -209,5 +209,5 @@ uint8_t drv_io_btm_get_p1 ( void )
  *****************************************************************************/
 uint8_t drv_io_btm_get_p2 ( void )
 {
-	return (uint8_t)GPIO_PinRead ( GPIO, BOARD_INITPINS_BTM_P1_PORT, BOARD_INITPINS_BTM_P1_PIN );
+    return (uint8_t)GPIO_PinRead ( GPIO, BOARD_INITPINS_BTM_P1_PORT, BOARD_INITPINS_BTM_P1_PIN );
 }

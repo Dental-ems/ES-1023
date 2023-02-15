@@ -15,12 +15,12 @@
 #include "task.h"
 #include "queue.h"
 
-#define MISC_QUEUE_MSG_NBR	2
+#define MISC_QUEUE_MSG_NBR    2
 
 typedef struct
 {
-	uint8_t key;
-	uint8_t value;
+    uint8_t key;
+    uint8_t value;
 } MISC_MSG_BODY;
 
 QueueHandle_t misc_queue_create ( void );

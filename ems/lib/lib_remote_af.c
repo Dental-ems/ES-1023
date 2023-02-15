@@ -23,9 +23,9 @@ static LIB_REMOTE_AF_CTX lib_remote_af_ctx;
  ******************************************************************************/
 void lib_remote_af_init ( void )
 {
-	memset ( &lib_remote_af_ctx, 0, sizeof ( LIB_REMOTE_AF_CTX ) );
+    memset ( &lib_remote_af_ctx, 0, sizeof ( LIB_REMOTE_AF_CTX ) );
 
-	drv_bus_init_master ( lib_remote_af_callback );
+    drv_bus_init_master ( lib_remote_af_callback );
 }
 
 /*******************************************************************************
@@ -34,25 +34,25 @@ void lib_remote_af_init ( void )
 void lib_remote_af_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
 {
     // Start receiving
-	drv_bus_receive_run ( data_buf_resp, LIB_REMOTE_AF_TRAME_LEN_RESP );
+    drv_bus_receive_run ( data_buf_resp, LIB_REMOTE_AF_TRAME_LEN_RESP );
 
     // Open transmitter
-	drv_bus_transmit_start ();
+    drv_bus_transmit_start ();
 
     // Write data on transmitter
-	drv_bus_transmit_run ( data_buf_req, LIB_REMOTE_AF_TRAME_LEN_REQ );
+    drv_bus_transmit_run ( data_buf_req, LIB_REMOTE_AF_TRAME_LEN_REQ );
 
     // Start transmitting
-	lib_remote_af_transmit ();
+    lib_remote_af_transmit ();
 
-	// Send to Airflow slave
-	drv_bus_send_to_slave ( DRV_BUS_ADDR_SLAVE_AF );
+    // Send to Airflow slave
+    drv_bus_send_to_slave ( DRV_BUS_ADDR_SLAVE_AF );
 
-	// Close transmitter
-	drv_bus_transmit_end ();
+    // Close transmitter
+    drv_bus_transmit_end ();
 
     // Waiting for response
-	lib_remote_af_receive ();
+    lib_remote_af_receive ();
 }
 
 /******************************************************************************
@@ -60,8 +60,8 @@ void lib_remote_af_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
  *****************************************************************************/
 void lib_remote_af_transmit ( void )
 {
-	// TODO : remove blocking procedure
-	// tip : use freertos peripheral option
+    // TODO : remove blocking procedure
+    // tip : use freertos peripheral option
 
     while ( lib_remote_af_ctx.flag_transmit == false ) { }
 
@@ -73,8 +73,8 @@ void lib_remote_af_transmit ( void )
  *****************************************************************************/
 void lib_remote_af_receive ( void )
 {
-	// TODO : remove blocking procedure
-	// tip : use freertos peripheral option
+    // TODO : remove blocking procedure
+    // tip : use freertos peripheral option
 
     while ( lib_remote_af_ctx.flag_receive == false ) { }
 
@@ -86,29 +86,29 @@ void lib_remote_af_receive ( void )
  *****************************************************************************/
 bool lib_remote_af_encode ( LIB_REMOTE_AF_LL_REQ* msg_to_encode, uint8_t version )
 {
-	bool result = false;
+    bool result = false;
 
-	if ( msg_to_encode != NULL )
-	{
-		if ( LIB_REMOTE_AF_TRAME_VERSION_01 == version )
-		{
-			if ( DRV_BUS_ADDR_SLAVE_AF == msg_to_encode->header.slave_addr )
-			{
-				if ( ( msg_to_encode->header.request_type > LIB_REMOTE_AF_REQ_UNDEF ) && ( msg_to_encode->header.request_type < LIB_REMOTE_AF_REQ_MAX ) )
-				{
-					msg_to_encode->header.master_addr 	   = DRV_BUS_ADDR_MASTER;
-					msg_to_encode->header.protocol_version = LIB_REMOTE_AF_TRAME_VERSION_01;
+    if ( msg_to_encode != NULL )
+    {
+        if ( LIB_REMOTE_AF_TRAME_VERSION_01 == version )
+        {
+            if ( DRV_BUS_ADDR_SLAVE_AF == msg_to_encode->header.slave_addr )
+            {
+                if ( ( msg_to_encode->header.request_type > LIB_REMOTE_AF_REQ_UNDEF ) && ( msg_to_encode->header.request_type < LIB_REMOTE_AF_REQ_MAX ) )
+                {
+                    msg_to_encode->header.master_addr        = DRV_BUS_ADDR_MASTER;
+                    msg_to_encode->header.protocol_version = LIB_REMOTE_AF_TRAME_VERSION_01;
 
-					msg_to_encode->end_of_frame = LIB_REMOTE_AF_TRAME_EOF;
-					msg_to_encode->checksum  	= lib_remote_af_checksum ( msg_to_encode->header );
-				}
+                    msg_to_encode->end_of_frame = LIB_REMOTE_AF_TRAME_EOF;
+                    msg_to_encode->checksum      = lib_remote_af_checksum ( msg_to_encode->header );
+                }
 
-				result = true;
-			}
-		}
-	}
+                result = true;
+            }
+        }
+    }
 
-	return result;
+    return result;
 }
 
 /******************************************************************************
@@ -116,31 +116,31 @@ bool lib_remote_af_encode ( LIB_REMOTE_AF_LL_REQ* msg_to_encode, uint8_t version
  *****************************************************************************/
 bool lib_remote_af_decode ( LIB_REMOTE_AF_LL_RESP* msg_to_decode )
 {
-	bool result = false;
+    bool result = false;
 
-	if ( msg_to_decode != NULL )
-	{
-		if ( LIB_REMOTE_AF_TRAME_VERSION_01 == msg_to_decode->header.protocol_version )
-		{
-			if ( ( msg_to_decode->header.slave_addr > 0 ) && ( msg_to_decode->header.master_addr > 0 ) )
-			{
-				// Switch because of response with same header
-				uint8_t temp = msg_to_decode->header.slave_addr;
-				msg_to_decode->header.slave_addr  = msg_to_decode->header.master_addr;
-				msg_to_decode->header.master_addr = temp;
+    if ( msg_to_decode != NULL )
+    {
+        if ( LIB_REMOTE_AF_TRAME_VERSION_01 == msg_to_decode->header.protocol_version )
+        {
+            if ( ( msg_to_decode->header.slave_addr > 0 ) && ( msg_to_decode->header.master_addr > 0 ) )
+            {
+                // Switch because of response with same header
+                uint8_t temp = msg_to_decode->header.slave_addr;
+                msg_to_decode->header.slave_addr  = msg_to_decode->header.master_addr;
+                msg_to_decode->header.master_addr = temp;
 
-				if ( ( msg_to_decode->header.request_type > LIB_REMOTE_AF_REQ_UNDEF ) && ( msg_to_decode->header.request_type < LIB_REMOTE_AF_REQ_MAX ) )
-				{
-					if ( lib_remote_af_checksum ( msg_to_decode->header ) == msg_to_decode->checksum )
-					{
-						result = true;
-					}
-				}
-			}
-		}
-	}
+                if ( ( msg_to_decode->header.request_type > LIB_REMOTE_AF_REQ_UNDEF ) && ( msg_to_decode->header.request_type < LIB_REMOTE_AF_REQ_MAX ) )
+                {
+                    if ( lib_remote_af_checksum ( msg_to_decode->header ) == msg_to_decode->checksum )
+                    {
+                        result = true;
+                    }
+                }
+            }
+        }
+    }
 
-	return result;
+    return result;
 }
 
 /******************************************************************************
@@ -148,14 +148,14 @@ bool lib_remote_af_decode ( LIB_REMOTE_AF_LL_RESP* msg_to_decode )
  *****************************************************************************/
 uint8_t lib_remote_af_extract_encoder ( uint8_t* data )
 {
-	uint32_t value = 0;
+    uint32_t value = 0;
 
-	value += data[0];
-	value += data[1];
-	value += data[2];
-	value += data[3];
+    value += data[0];
+    value += data[1];
+    value += data[2];
+    value += data[3];
 
-	return value;
+    return value;
 }
 
 /******************************************************************************
@@ -163,16 +163,16 @@ uint8_t lib_remote_af_extract_encoder ( uint8_t* data )
  *****************************************************************************/
 uint8_t lib_remote_af_checksum ( LIB_REMOTE_AF_LL_HEADER header_to_checksum )
 {
-	uint8_t sum_computed = 0;
+    uint8_t sum_computed = 0;
 
-	sum_computed += header_to_checksum.slave_addr;
-	sum_computed += header_to_checksum.master_addr;
-	sum_computed += header_to_checksum.protocol_version;
-	sum_computed += header_to_checksum.request_type;
+    sum_computed += header_to_checksum.slave_addr;
+    sum_computed += header_to_checksum.master_addr;
+    sum_computed += header_to_checksum.protocol_version;
+    sum_computed += header_to_checksum.request_type;
 
-	sum_computed &= LIB_REMOTE_AF_TRAME_CHECKSUM;
+    sum_computed &= LIB_REMOTE_AF_TRAME_CHECKSUM;
 
-	return sum_computed;
+    return sum_computed;
 }
 
 /*******************************************************************************
@@ -187,7 +187,7 @@ void lib_remote_af_callback ( USART_Type *base, usart_handle_t *handle, status_t
 
     if ( kStatus_USART_RxIdle == status )
     {
-    	lib_remote_af_ctx.flag_receive = true;
+        lib_remote_af_ctx.flag_receive = true;
     }
 }
 
@@ -196,23 +196,23 @@ void lib_remote_af_callback ( USART_Type *base, usart_handle_t *handle, status_t
  ******************************************************************************/
 bool lib_remote_af_request ( uint8_t req_type, LIB_REMOTE_AF_LL_REQ* msg_req, LIB_REMOTE_AF_LL_RESP* msg_resp )
 {
-	bool    result = false;
-	uint8_t buffer_in[LIB_REMOTE_AF_TRAME_LEN_REQ];
-	uint8_t buffer_out[LIB_REMOTE_AF_TRAME_LEN_RESP];
+    bool    result = false;
+    uint8_t buffer_in[LIB_REMOTE_AF_TRAME_LEN_REQ];
+    uint8_t buffer_out[LIB_REMOTE_AF_TRAME_LEN_RESP];
 
-	msg_req->header.slave_addr   = DRV_BUS_ADDR_SLAVE_AF;
-	msg_req->header.request_type = req_type;
+    msg_req->header.slave_addr   = DRV_BUS_ADDR_SLAVE_AF;
+    msg_req->header.request_type = req_type;
 
-	if ( true == lib_remote_af_encode ( msg_req, LIB_REMOTE_AF_TRAME_VERSION_01 ) )
-	{
-		memcpy ( msg_req, buffer_in, LIB_REMOTE_AF_TRAME_LEN_REQ );
+    if ( true == lib_remote_af_encode ( msg_req, LIB_REMOTE_AF_TRAME_VERSION_01 ) )
+    {
+        memcpy ( msg_req, buffer_in, LIB_REMOTE_AF_TRAME_LEN_REQ );
 
-		lib_remote_af_exchange ( buffer_in, buffer_out );
+        lib_remote_af_exchange ( buffer_in, buffer_out );
 
-		memcpy ( buffer_out, msg_resp, LIB_REMOTE_AF_TRAME_LEN_RESP );
+        memcpy ( buffer_out, msg_resp, LIB_REMOTE_AF_TRAME_LEN_RESP );
 
-		result = lib_remote_af_decode ( msg_resp );
-	}
+        result = lib_remote_af_decode ( msg_resp );
+    }
 
-	return result;
+    return result;
 }

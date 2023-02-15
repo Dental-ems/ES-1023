@@ -13,14 +13,14 @@
 
 #include "misc.h"
 
-#define APP_VISUAL_PRIORITY 	   2U
-#define APP_VISUAL_BLINK_RUN_MS	   1000U
+#define APP_VISUAL_PRIORITY        2U
+#define APP_VISUAL_BLINK_RUN_MS    1000U
 
 typedef struct
 {
-	QueueHandle_t 	handle;
-	uint8_t			status;
-	uint16_t 		next_period;
+    QueueHandle_t    handle;
+    uint8_t          status;
+    uint16_t         next_period;
 } APP_VISUAL_CTX;
 
 bool  app_visual_init     ( QueueHandle_t* app_visual_handle );

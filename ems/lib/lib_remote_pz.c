@@ -23,9 +23,9 @@ static LIB_REMOTE_PZ_CTX lib_remote_pz_ctx;
  ******************************************************************************/
 void lib_remote_pz_init ( void )
 {
-	memset ( &lib_remote_pz_ctx, 0, sizeof ( LIB_REMOTE_PZ_CTX ) );
+    memset ( &lib_remote_pz_ctx, 0, sizeof ( LIB_REMOTE_PZ_CTX ) );
 
-	drv_bus_init_master ( lib_remote_pz_callback );
+    drv_bus_init_master ( lib_remote_pz_callback );
 }
 
 /*******************************************************************************
@@ -34,25 +34,25 @@ void lib_remote_pz_init ( void )
 void lib_remote_pz_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
 {
     // Start receiving
-	drv_bus_receive_run ( data_buf_resp, LIB_REMOTE_PZ_TRAME_LEN_RESP );
+    drv_bus_receive_run ( data_buf_resp, LIB_REMOTE_PZ_TRAME_LEN_RESP );
 
     // Open transmitter
-	drv_bus_transmit_start ();
+    drv_bus_transmit_start ();
 
     // Write data on transmitter
-	drv_bus_transmit_run ( data_buf_req, LIB_REMOTE_PZ_TRAME_LEN_REQ );
+    drv_bus_transmit_run ( data_buf_req, LIB_REMOTE_PZ_TRAME_LEN_REQ );
 
     // Start transmitting
-	lib_remote_af_transmit ();
+    lib_remote_af_transmit ();
 
-	// Send to Piezon slave
-	drv_bus_send_to_slave ( DRV_BUS_ADDR_SLAVE_PZ );
+    // Send to Piezon slave
+    drv_bus_send_to_slave ( DRV_BUS_ADDR_SLAVE_PZ );
 
-	// Close transmitter
-	drv_bus_transmit_end ();
+    // Close transmitter
+    drv_bus_transmit_end ();
 
     // Waiting for response
-	lib_remote_af_receive ();
+    lib_remote_af_receive ();
 }
 
 /******************************************************************************
@@ -60,8 +60,8 @@ void lib_remote_pz_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
  *****************************************************************************/
 void lib_remote_pz_transmit ( void )
 {
-	// TODO : remove blocking procedure
-	// tip : use freertos peripheral option
+    // TODO : remove blocking procedure
+    // tip : use freertos peripheral option
 
     while ( lib_remote_pz_ctx.flag_transmit == false ) { }
 
@@ -73,8 +73,8 @@ void lib_remote_pz_transmit ( void )
  *****************************************************************************/
 void lib_remote_pz_receive ( void )
 {
-	// TODO : remove blocking procedure
-	// tip : use freertos peripheral option
+    // TODO : remove blocking procedure
+    // tip : use freertos peripheral option
 
     while ( lib_remote_pz_ctx.flag_receive == false ) { }
 
@@ -86,7 +86,7 @@ void lib_remote_pz_receive ( void )
  *****************************************************************************/
 bool lib_remote_pz_encode ( LIB_REMOTE_PZ_LL_REQ* msg_to_encode, uint8_t version )
 {
-	return lib_remote_af_encode ( msg_to_encode, version );
+    return lib_remote_af_encode ( msg_to_encode, version );
 }
 
 /******************************************************************************
@@ -94,7 +94,7 @@ bool lib_remote_pz_encode ( LIB_REMOTE_PZ_LL_REQ* msg_to_encode, uint8_t version
  *****************************************************************************/
 bool lib_remote_pz_decode ( LIB_REMOTE_PZ_LL_RESP* msg_to_decode )
 {
-	return lib_remote_af_decode ( msg_to_decode );
+    return lib_remote_af_decode ( msg_to_decode );
 }
 
 /******************************************************************************
@@ -102,7 +102,7 @@ bool lib_remote_pz_decode ( LIB_REMOTE_PZ_LL_RESP* msg_to_decode )
  *****************************************************************************/
 uint8_t lib_remote_pz_extract_encoder ( uint8_t* data )
 {
-	return lib_remote_af_extract_encoder ( data );
+    return lib_remote_af_extract_encoder ( data );
 }
 
 /******************************************************************************
@@ -110,7 +110,7 @@ uint8_t lib_remote_pz_extract_encoder ( uint8_t* data )
  *****************************************************************************/
 uint8_t lib_remote_pz_checksum ( LIB_REMOTE_PZ_LL_HEADER header_to_checksum )
 {
-	return lib_remote_af_checksum ( header_to_checksum );
+    return lib_remote_af_checksum ( header_to_checksum );
 }
 
 /*******************************************************************************
@@ -125,7 +125,7 @@ void lib_remote_pz_callback ( USART_Type *base, usart_handle_t *handle, status_t
 
     if ( kStatus_USART_RxIdle == status )
     {
-    	lib_remote_pz_ctx.flag_receive = true;
+        lib_remote_pz_ctx.flag_receive = true;
     }
 }
 
@@ -134,23 +134,23 @@ void lib_remote_pz_callback ( USART_Type *base, usart_handle_t *handle, status_t
  ******************************************************************************/
 bool lib_remote_pz_request ( uint8_t req_type, LIB_REMOTE_PZ_LL_REQ* msg_req, LIB_REMOTE_PZ_LL_RESP* msg_resp )
 {
-	bool    result = false;
-	uint8_t buffer_in[LIB_REMOTE_PZ_TRAME_LEN_REQ];
-	uint8_t buffer_out[LIB_REMOTE_PZ_TRAME_LEN_RESP];
+    bool    result = false;
+    uint8_t buffer_in[LIB_REMOTE_PZ_TRAME_LEN_REQ];
+    uint8_t buffer_out[LIB_REMOTE_PZ_TRAME_LEN_RESP];
 
-	msg_req->header.slave_addr   = DRV_BUS_ADDR_SLAVE_PZ;
-	msg_req->header.request_type = req_type;
+    msg_req->header.slave_addr   = DRV_BUS_ADDR_SLAVE_PZ;
+    msg_req->header.request_type = req_type;
 
-	if ( true == lib_remote_pz_encode ( msg_req, LIB_REMOTE_PZ_TRAME_VERSION_01 ) )
-	{
-		memcpy ( msg_req, buffer_in, LIB_REMOTE_PZ_TRAME_LEN_REQ );
+    if ( true == lib_remote_pz_encode ( msg_req, LIB_REMOTE_PZ_TRAME_VERSION_01 ) )
+    {
+        memcpy ( msg_req, buffer_in, LIB_REMOTE_PZ_TRAME_LEN_REQ );
 
-		lib_remote_pz_exchange ( buffer_in, buffer_out );
+        lib_remote_pz_exchange ( buffer_in, buffer_out );
 
-		memcpy ( buffer_out, msg_resp, LIB_REMOTE_PZ_TRAME_LEN_RESP );
+        memcpy ( buffer_out, msg_resp, LIB_REMOTE_PZ_TRAME_LEN_RESP );
 
-		result = lib_remote_pz_decode ( msg_resp );
-	}
+        result = lib_remote_pz_decode ( msg_resp );
+    }
 
-	return result;
+    return result;
 }
