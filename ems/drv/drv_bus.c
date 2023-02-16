@@ -45,7 +45,7 @@ void drv_bus_init_master ( DRV_BUS_CALLBACK uart_callback )
         satellite_uart_config.enableTx     = true;
         satellite_uart_config.enableRx     = true;
 
-        USART_Init ( DRV_BUS_UART_SAT_ID, &satellite_uart_config, CLOCK_GetFlexCommClkFreq(7) );
+        USART_Init ( DRV_BUS_UART_SAT_ID, &satellite_uart_config, CLOCK_GetFlexCommClkFreq(0U) );
         //USART_Enable9bitMode ( DRV_BUS_UART_SAT_ID, true );
 
         // Configure Master address

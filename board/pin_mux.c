@@ -24,6 +24,7 @@ pin_labels:
   label: UART_SAT_RX, identifier: UART_SAT_RX}
 - {pin_num: '65', pin_signal: PIO1_30/FC7_TXD_SCL_MISO_WS/SD0_D7/SCT_GPI7/USB1_OVERCURRENTN/USB1_LEDN/PLU_IN1, label: UART_SAT_TX, identifier: UART_SAT_TX}
 - {pin_num: '43', pin_signal: PIO1_17/FC6_RTS_SCL_SSEL1/SCT0_OUT4/SD1_CARD_INT_N/SD1_CARD_DET_N, label: UART_SAT_DE, identifier: UART_SAT_DE}
+- {pin_num: '70', pin_signal: PIO0_24/FC0_RXD_SDA_MOSI_DATA/SD0_D0/CT_INP8/SCT_GPI0/SECURE_GPIO0_24, label: EN_5V, identifier: SW;SW5;SW_5V;EN_5V}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -69,6 +70,7 @@ BOARD_InitPins:
     direction: INPUT}
   - {pin_num: '65', peripheral: FLEXCOMM7, signal: TXD_SCL_MISO_WS, pin_signal: PIO1_30/FC7_TXD_SCL_MISO_WS/SD0_D7/SCT_GPI7/USB1_OVERCURRENTN/USB1_LEDN/PLU_IN1, direction: OUTPUT}
   - {pin_num: '43', peripheral: GPIO, signal: 'PIO1, 17', pin_signal: PIO1_17/FC6_RTS_SCL_SSEL1/SCT0_OUT4/SD1_CARD_INT_N/SD1_CARD_DET_N, direction: OUTPUT}
+  - {pin_num: '70', peripheral: GPIO, signal: 'PIO0, 24', pin_signal: PIO0_24/FC0_RXD_SDA_MOSI_DATA/SD0_D0/CT_INP8/SCT_GPI0/SECURE_GPIO0_24, identifier: EN_5V, direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -87,8 +89,18 @@ void BOARD_InitPins(void)
     /* Enables the clock for the I/O controller.: Enable Clock. */
     CLOCK_EnableClock(kCLOCK_Iocon);
 
+    /* Enables the clock for the GPIO0 module */
+    CLOCK_EnableClock(kCLOCK_Gpio0);
+
     /* Enables the clock for the GPIO1 module */
     CLOCK_EnableClock(kCLOCK_Gpio1);
+
+    gpio_pin_config_t EN_5V_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PIO0_24 (pin 70)  */
+    GPIO_PinInit(BOARD_INITPINS_EN_5V_GPIO, BOARD_INITPINS_EN_5V_PORT, BOARD_INITPINS_EN_5V_PIN, &EN_5V_config);
 
     gpio_pin_config_t BTM_OFF_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -145,6 +157,19 @@ void BOARD_InitPins(void)
                           * : Enable Digital mode.
                           * Digital input is enabled. */
                          | IOCON_PIO_DIGIMODE(PIO0_20_DIGIMODE_DIGITAL));
+
+    IOCON->PIO[0][24] = ((IOCON->PIO[0][24] &
+                          /* Mask bits to zero which are setting */
+                          (~(IOCON_PIO_FUNC_MASK | IOCON_PIO_DIGIMODE_MASK)))
+
+                         /* Selects pin function.
+                          * : PORT024 (pin 70) is configured as PIO0_24. */
+                         | IOCON_PIO_FUNC(PIO0_24_FUNC_ALT0)
+
+                         /* Select Digital mode.
+                          * : Enable Digital mode.
+                          * Digital input is enabled. */
+                         | IOCON_PIO_DIGIMODE(PIO0_24_DIGIMODE_DIGITAL));
 
     IOCON->PIO[1][10] = ((IOCON->PIO[1][10] &
                           /* Mask bits to zero which are setting */

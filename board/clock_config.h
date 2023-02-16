@@ -116,7 +116,7 @@ void BOARD_BootClockPLL100M(void);
 /*******************************************************************************
  * Definitions for BOARD_BootClockPLL150M configuration
  ******************************************************************************/
-#define BOARD_BOOTCLOCKPLL150M_CORE_CLOCK         150000000U  /*!< Core clock frequency: 150000000Hz */
+#define BOARD_BOOTCLOCKPLL150M_CORE_CLOCK          12000000U  /*!< Core clock frequency: 12000000Hz */
 
 
 /*******************************************************************************

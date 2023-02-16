@@ -33,6 +33,12 @@ void BOARD_InitBootPins(void);
 #define PIO0_20_FUNC_ALT7 0x07u
 /*!
  * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
+#define PIO0_24_DIGIMODE_DIGITAL 0x01u
+/*!
+ * @brief Selects pin function.: Alternative connection 0. */
+#define PIO0_24_FUNC_ALT0 0x00u
+/*!
+ * @brief Select Digital mode.: Enable Digital mode. Digital input is enabled. */
 #define PIO1_10_DIGIMODE_DIGITAL 0x01u
 /*!
  * @brief Selects pin function.: Alternative connection 0. */
@@ -243,6 +249,17 @@ void BOARD_InitBootPins(void);
 #define BOARD_INITPINS_UART_SAT_DE_PIN 17U                   /*!<@brief PORT pin number */
 #define BOARD_INITPINS_UART_SAT_DE_PIN_MASK (1U << 17U)      /*!<@brief PORT pin mask */
                                                              /* @} */
+
+/*! @name PIO0_24 (number 70), EN_5V
+  @{ */
+
+/* Symbols to be used with GPIO driver */
+#define BOARD_INITPINS_EN_5V_GPIO GPIO                 /*!<@brief GPIO peripheral base pointer */
+#define BOARD_INITPINS_EN_5V_GPIO_PIN_MASK (1U << 24U) /*!<@brief GPIO pin mask */
+#define BOARD_INITPINS_EN_5V_PORT 0U                   /*!<@brief PORT peripheral base pointer */
+#define BOARD_INITPINS_EN_5V_PIN 24U                   /*!<@brief PORT pin number */
+#define BOARD_INITPINS_EN_5V_PIN_MASK (1U << 24U)      /*!<@brief PORT pin mask */
+                                                       /* @} */
 
 /*!
  * @brief Configures pin routing and optionally pin electrical features.

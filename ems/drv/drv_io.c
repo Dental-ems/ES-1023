@@ -31,7 +31,8 @@ void drv_io_init ( void )
 
         BOARD_InitBootPins ();
 
-        GPIO_PortInit ( GPIO, BOARD_INITPINS_LED_MAIN_PORT );
+        GPIO_PortInit ( GPIO, 0 );
+        GPIO_PortInit ( GPIO, 1 );
 
 #if 0 // Ports are all the same
         GPIO_PortInit ( GPIO, BOARD_INITPINS_BTM_OFF_PORT );
@@ -64,6 +65,21 @@ void drv_io_led_main_init ( void )
     };
 
     GPIO_PinInit ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, &led_main_cfg );
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void drv_io_en_5v_init ( void )
+{
+    drv_io_init ();
+
+    gpio_pin_config_t en_5v_config = {
+        kGPIO_DigitalOutput,
+        0,
+    };
+
+    GPIO_PinInit  ( GPIO, BOARD_INITPINS_EN_5V_PORT, BOARD_INITPINS_EN_5V_PIN, &en_5v_config );
 }
 
 /******************************************************************************
@@ -146,6 +162,14 @@ void drv_io_led_main_high ( void )
 void drv_io_led_main_low ( void )
 {
     GPIO_PinWrite ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, BOARD_INITPINS_LED_MAIN_PIN, 0 );
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void drv_io_en_5v_high ( void )
+{
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_EN_5V_PORT, BOARD_INITPINS_EN_5V_PIN, 1 );
 }
 
 /******************************************************************************

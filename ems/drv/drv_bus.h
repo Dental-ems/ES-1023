@@ -16,7 +16,7 @@
 #define DRV_BUS_ADDR_SLAVE_PZ     0x81
 #define DRV_BUS_ADDR_SLAVE_AF     0x82
 
-#define DRV_BUS_UART_SAT_ID       USART1
+#define DRV_BUS_UART_SAT_ID       USART7
 
 typedef void (*DRV_BUS_CALLBACK)( USART_Type *base, usart_handle_t *handle, status_t status, void *userData );
 

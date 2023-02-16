@@ -226,15 +226,15 @@ void BOARD_BootClockPLL100M(void)
 name: BOARD_BootClockPLL150M
 called_from_default_init: true
 outputs:
+- {id: CLKOUT_clock.outFreq, value: 12 MHz}
 - {id: FXCOM7_clock.outFreq, value: 12 MHz}
-- {id: System_clock.outFreq, value: 150 MHz}
+- {id: System_clock.outFreq, value: 12 MHz}
 settings:
 - {id: PLL0_Mode, value: Normal}
 - {id: ENABLE_CLKIN_ENA, value: Enabled}
 - {id: ENABLE_SYSTEM_CLK_OUT, value: Enabled}
+- {id: SYSCON.CLKOUTSEL.sel, value: SYSCON.MAINCLKSELB}
 - {id: SYSCON.FCCLKSEL7.sel, value: ANACTRL.fro_12m_clk}
-- {id: SYSCON.MAINCLKSELB.sel, value: SYSCON.PLL0_BYPASS}
-- {id: SYSCON.PLL0CLKSEL.sel, value: SYSCON.CLK_IN_EN}
 - {id: SYSCON.PLL0M_MULT.scale, value: '150', locked: true}
 - {id: SYSCON.PLL0N_DIV.scale, value: '8', locked: true}
 - {id: SYSCON.PLL0_PDEC.scale, value: '2', locked: true}
@@ -265,22 +265,8 @@ void BOARD_BootClockPLL150M(void)
     SYSCON->CLOCK_CTRL |= SYSCON_CLOCK_CTRL_CLKIN_ENA_MASK;       /* Enable clk_in from XTAL32M clock  */
     ANACTRL->XO32M_CTRL |= ANACTRL_XO32M_CTRL_ENABLE_SYSTEM_CLK_OUT_MASK;    /* Enable clk_in to system  */
 
-    POWER_SetVoltageForFreq(150000000U);                  /*!< Set voltage for the one of the fastest clock outputs: System clock output */
-    CLOCK_SetFLASHAccessCyclesForFreq(150000000U);          /*!< Set FLASH wait states for core */
-
-    /*!< Set up PLL */
-    CLOCK_AttachClk(kEXT_CLK_to_PLL0);                    /*!< Switch PLL0CLKSEL to EXT_CLK */
-    POWER_DisablePD(kPDRUNCFG_PD_PLL0);                  /* Ensure PLL is on  */
-    POWER_DisablePD(kPDRUNCFG_PD_PLL0_SSCG);
-    const pll_setup_t pll0Setup = {
-        .pllctrl = SYSCON_PLL0CTRL_CLKEN_MASK | SYSCON_PLL0CTRL_SELI(53U) | SYSCON_PLL0CTRL_SELP(31U),
-        .pllndec = SYSCON_PLL0NDEC_NDIV(8U),
-        .pllpdec = SYSCON_PLL0PDEC_PDIV(1U),
-        .pllsscg = {0x0U,(SYSCON_PLL0SSCG1_MDIV_EXT(150U) | SYSCON_PLL0SSCG1_SEL_EXT_MASK)},
-        .pllRate = 150000000U,
-        .flags =  PLL_SETUPFLAG_WAITLOCK
-    };
-    CLOCK_SetPLL0Freq(&pll0Setup);                       /*!< Configure PLL0 to the desired values */
+    POWER_SetVoltageForFreq(12000000U);                  /*!< Set voltage for the one of the fastest clock outputs: System clock output */
+    CLOCK_SetFLASHAccessCyclesForFreq(12000000U);          /*!< Set FLASH wait states for core */
 
     /*!< Set up dividers */
     #if FSL_CLOCK_DRIVER_VERSION >= MAKE_VERSION(2, 3, 4)
@@ -289,9 +275,12 @@ void BOARD_BootClockPLL150M(void)
       CLOCK_SetClkDiv(kCLOCK_DivFlexFrg7, 256U, false);         /*!< Set DIV to value 0xFF and MULT to value 0U in related FLEXFRGCTRL register */
     #endif
     CLOCK_SetClkDiv(kCLOCK_DivAhbClk, 1U, false);         /*!< Set AHBCLKDIV divider to value 1 */
+    CLOCK_SetClkDiv(kCLOCK_DivClkOut, 0U, true);               /*!< Reset CLKOUTDIV divider counter and halt it */
+    CLOCK_SetClkDiv(kCLOCK_DivClkOut, 1U, false);         /*!< Set CLKOUTDIV divider to value 1 */
 
     /*!< Set up clock selectors - Attach clocks to the peripheries */
-    CLOCK_AttachClk(kPLL0_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to PLL0 */
+    CLOCK_AttachClk(kMAIN_CLK_to_CLKOUT);                 /*!< Switch CLKOUT to MAIN_CLK */
+    CLOCK_AttachClk(kFRO12M_to_MAIN_CLK);                 /*!< Switch MAIN_CLK to FRO12M */
     CLOCK_AttachClk(kFRO12M_to_FLEXCOMM7);                 /*!< Switch FLEXCOMM7 to FRO12M */
 
     /*!< Set SystemCoreClock variable. */

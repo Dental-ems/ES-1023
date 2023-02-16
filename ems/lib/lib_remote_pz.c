@@ -159,19 +159,19 @@ void lib_remote_pz_callback ( USART_Type *base, usart_handle_t *handle, status_t
 bool lib_remote_pz_request ( uint8_t req_type, LIB_REMOTE_PZ_LL_REQ* msg_req, LIB_REMOTE_PZ_LL_RESP* msg_resp )
 {
     bool    result = false;
-    uint8_t buffer_in[LIB_REMOTE_PZ_TRAME_LEN_REQ];
-    uint8_t buffer_out[LIB_REMOTE_PZ_TRAME_LEN_RESP];
+    uint8_t buffer_write[LIB_REMOTE_PZ_TRAME_LEN_REQ];
+    uint8_t buffer_read [LIB_REMOTE_PZ_TRAME_LEN_RESP];
 
     msg_req->header.slave_addr   = DRV_BUS_ADDR_SLAVE_PZ;
     msg_req->header.request_type = req_type;
 
     if ( true == lib_remote_pz_encode ( msg_req, LIB_REMOTE_PZ_TRAME_VERSION_01 ) )
     {
-        memcpy ( msg_req, buffer_in, LIB_REMOTE_PZ_TRAME_LEN_REQ );
+        memcpy ( buffer_write, msg_req, LIB_REMOTE_PZ_TRAME_LEN_REQ );
 
-        lib_remote_pz_exchange ( buffer_in, buffer_out );
+        lib_remote_pz_exchange ( buffer_write, buffer_read );
 
-        memcpy ( buffer_out, msg_resp, LIB_REMOTE_PZ_TRAME_LEN_RESP );
+        memcpy ( msg_resp, buffer_read, LIB_REMOTE_PZ_TRAME_LEN_RESP );
 
         result = lib_remote_pz_decode ( msg_resp );
     }
