@@ -15,7 +15,7 @@
 #include "misc.h"
 
 #define APP_SATELLITE_PRIORITY          3U
-#define APP_SATELLITE_PERIOD_MS         (5*1000U)
+#define APP_SATELLITE_PERIOD_MS         (500U)
 #define APP_SATELLITE_STEP_DELTA        5555U   // must be changed
 #define APP_SATELLITE_STEP_TOL          44U     // must be changed
 #define APP_SATELLITE_STEP_REF_MIN      333U    // must be changed

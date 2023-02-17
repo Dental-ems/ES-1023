@@ -153,7 +153,6 @@ uint8_t lib_remote_af_extract_encoder ( uint8_t* data )
 {
     uint32_t value = 0;
 
-    value += data[3] << 3;
     value += data[2] << 2;
     value += data[1] << 1;
     value += data[0];

@@ -14,6 +14,9 @@
 
 #include "app_satellite.h"
 
+#warning TO BE MOVE TO OTHER MODULE
+#include "../lib/lib_alim.h"
+
 /*******************************************************************************
  * @brief Variables
  ******************************************************************************/
@@ -24,6 +27,8 @@ static APP_SATELLITE_CTX app_satellite_ctx;
  *****************************************************************************/
 static void app_satellite_heartbeat ( void *pvParameters )
 {
+    lib_alim_enable ();
+
     while (1)
     {
         // Airflow management
@@ -267,6 +272,8 @@ bool app_satellite_init ( QueueHandle_t* app_satellite_handle )
         *app_satellite_handle = app_satellite_ctx.handle;
 
         lib_remote_af_init ();
+
+        lib_alim_init ();
     }
 
     return result;
