@@ -16,10 +16,10 @@
 
 #define APP_SATELLITE_PRIORITY          3U
 #define APP_SATELLITE_PERIOD_MS         (500U)
-#define APP_SATELLITE_STEP_DELTA        5555U   // must be changed
-#define APP_SATELLITE_STEP_TOL          44U     // must be changed
-#define APP_SATELLITE_STEP_REF_MIN      333U    // must be changed
-#define APP_SATELLITE_STEP_REF_MAX      99999U  // must be changed
+#define APP_SATELLITE_STEP_DELTA        60U   // must be changed
+#define APP_SATELLITE_STEP_TOL          2U     // must be changed
+#define APP_SATELLITE_STEP_REF_MIN      0U    // must be changed
+#define APP_SATELLITE_STEP_REF_MAX      255U  // must be changed
 #define APP_SATELLITE_NB_READ_FOR_REF   3U
 
 enum APP_SATELLITE_WATER_SETTING

@@ -28,12 +28,17 @@ static APP_SATELLITE_CTX app_satellite_ctx;
 static void app_satellite_heartbeat ( void *pvParameters )
 {
     lib_alim_enable ();
-    //app_satellite_cmd_light_pz_on_off ( false );
+
+    vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
+    app_satellite_cmd_light_pz_on_off ( false );
 
     while (1)
     {
+        vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
         // Airflow management
-        /*app_satellite_update_encoder_af ();
+        app_satellite_update_encoder_af ();
 
         if ( false == app_satellite_ctx.airflow.encoder.has_ref )
         {
@@ -43,8 +48,12 @@ static void app_satellite_heartbeat ( void *pvParameters )
         {
             app_satellite_compute_water_setting_af ();
 
+            vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
             app_satellite_update_holder_af ();
         }
+
+        vTaskDelay ( APP_SATELLITE_PERIOD_MS );
 
         // Piezon management
         app_satellite_update_encoder_pz ();
@@ -57,20 +66,14 @@ static void app_satellite_heartbeat ( void *pvParameters )
         {
             app_satellite_compute_water_setting_pz ();
 
+            vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
             app_satellite_update_holder_pz ();
 
+            vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
             app_satellite_cmd_light_pz_on_off ( true );
-        }*/
-
-        ////////////////////////////////////////////////////////////////////////
-        vTaskDelay ( APP_SATELLITE_PERIOD_MS );
-
-        app_satellite_cmd_light_pz_on_off ( true );
-
-        vTaskDelay ( APP_SATELLITE_PERIOD_MS );
-
-        //app_satellite_update_encoder_af();
-        ////////////////////////////////////////////////////////////////////////
+        }
 
         vTaskDelay ( APP_SATELLITE_PERIOD_MS );
     }
