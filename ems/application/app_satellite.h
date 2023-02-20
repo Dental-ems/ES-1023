@@ -72,6 +72,7 @@ void app_satellite_update_encoder_af        ( void );
 void app_satellite_update_encoder_pz        ( void );
 void app_satellite_update_holder_af         ( void );
 void app_satellite_update_holder_pz         ( void );
+void app_satellite_cmd_light_pz             ( void );
 void app_satellite_take_step_reference_af   ( void );
 void app_satellite_take_step_reference_pz   ( void );
 void app_satellite_compute_water_setting_af ( void );

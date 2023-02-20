@@ -66,7 +66,7 @@ void drv_bus_init_master ( DRV_BUS_CALLBACK uart_callback )
  *****************************************************************************/
 void drv_bus_transmit_start ( void )
 {
-    GPIO_PinWrite ( GPIO, BOARD_INITPINS_UART_SAT_DE_PORT, BOARD_INITPINS_UART_SAT_DE_PIN, 0 );
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_UART_SAT_DE_PORT, BOARD_INITPINS_UART_SAT_DE_PIN, 1 );
 }
 
 /******************************************************************************
@@ -74,7 +74,7 @@ void drv_bus_transmit_start ( void )
  *****************************************************************************/
 void drv_bus_transmit_end ( void )
 {
-    GPIO_PinWrite ( GPIO, BOARD_INITPINS_UART_SAT_DE_PORT, BOARD_INITPINS_UART_SAT_DE_PIN, 1 );
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_UART_SAT_DE_PORT, BOARD_INITPINS_UART_SAT_DE_PIN, 0 );
 }
 
 /******************************************************************************

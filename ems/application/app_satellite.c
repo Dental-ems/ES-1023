@@ -57,6 +57,8 @@ static void app_satellite_heartbeat ( void *pvParameters )
             app_satellite_compute_water_setting_pz ();
 
             app_satellite_update_holder_pz ();
+
+            app_satellite_cmd_light_pz ();
         }
 
         vTaskDelay ( APP_SATELLITE_PERIOD_MS );
@@ -141,6 +143,17 @@ void app_satellite_update_holder_pz ( void )
             app_satellite_ctx.piezon.encoder.cpt++;
         }
     }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_cmd_light_pz ( void )
+{
+    LIB_REMOTE_PZ_LL_REQ  msg_to_piezon;
+    LIB_REMOTE_PZ_LL_RESP msg_from_piezon;
+
+    lib_remote_af_request ( LIB_REMOTE_AF_REQ_LED_ON, &msg_to_piezon, &msg_from_piezon );
 }
 
 /******************************************************************************

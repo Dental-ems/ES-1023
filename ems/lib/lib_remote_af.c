@@ -45,7 +45,7 @@ void lib_remote_af_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
     // Write data on transmitter
     drv_bus_transmit_run ( data_buf_req, LIB_REMOTE_AF_TRAME_LEN_REQ );
 
-    // Start transmitting
+    // Waiting while transmitting
     lib_remote_af_transmit ();
 
     // Close transmitter
