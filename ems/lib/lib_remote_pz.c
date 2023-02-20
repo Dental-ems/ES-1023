@@ -25,7 +25,7 @@ void lib_remote_pz_init ( void )
 {
     memset ( &lib_remote_pz_ctx, 0, sizeof ( LIB_REMOTE_PZ_CTX ) );
 
-    drv_bus_init_master ( lib_remote_pz_callback );
+    drv_bus_init_master ( );
 }
 
 /*******************************************************************************
@@ -33,9 +33,6 @@ void lib_remote_pz_init ( void )
  ******************************************************************************/
 void lib_remote_pz_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
 {
-    // Start receiving
-    drv_bus_receive_run ( data_buf_resp, LIB_REMOTE_PZ_TRAME_LEN_RESP );
-
     // Open transmitter
     drv_bus_transmit_start ();
 
@@ -43,42 +40,16 @@ void lib_remote_pz_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
     drv_bus_transmit_run ( data_buf_req, LIB_REMOTE_PZ_TRAME_LEN_REQ );
 
     // Start transmitting
-    lib_remote_pz_transmit ();
-
-    // Send to Piezon slave
-    drv_bus_send_to_slave ( DRV_BUS_ADDR_SLAVE_PZ );
+    drv_bus_transmit ();
 
     // Close transmitter
     drv_bus_transmit_end ();
 
+    // Start receiving
+    drv_bus_receive_run ( data_buf_resp, LIB_REMOTE_PZ_TRAME_LEN_RESP );
+
     // Waiting for response
-    lib_remote_pz_receive ();
-}
-
-/******************************************************************************
- * @brief
- *****************************************************************************/
-void lib_remote_pz_transmit ( void )
-{
-    // TODO : remove blocking procedure
-    // tip : use freertos peripheral option
-
-    while ( lib_remote_pz_ctx.flag_transmit == false ) { }
-
-    lib_remote_pz_ctx.flag_transmit = false;
-}
-
-/******************************************************************************
- * @brief
- *****************************************************************************/
-void lib_remote_pz_receive ( void )
-{
-    // TODO : remove blocking procedure
-    // tip : use freertos peripheral option
-
-    while ( lib_remote_pz_ctx.flag_receive == false ) { }
-
-    lib_remote_pz_ctx.flag_receive = false;
+    drv_bus_receive ();
 }
 
 /******************************************************************************
@@ -132,25 +103,9 @@ uint8_t lib_remote_pz_extract_holder_rfid ( uint8_t* data )
 /******************************************************************************
  * @brief
  *****************************************************************************/
-uint8_t lib_remote_pz_checksum ( LIB_REMOTE_PZ_LL_HEADER header_to_checksum )
+uint8_t lib_remote_pz_checksum ( uint8_t* trame, uint8_t size )
 {
-    return lib_remote_af_checksum ( header_to_checksum );
-}
-
-/*******************************************************************************
- * @brief
- ******************************************************************************/
-void lib_remote_pz_callback ( USART_Type *base, usart_handle_t *handle, status_t status, void *user_data )
-{
-    if ( kStatus_USART_TxIdle == status )
-    {
-        lib_remote_pz_ctx.flag_transmit = true;
-    }
-
-    if ( kStatus_USART_RxIdle == status )
-    {
-        lib_remote_pz_ctx.flag_receive = true;
-    }
+    return lib_remote_af_checksum ( trame, size );
 }
 
 /*******************************************************************************

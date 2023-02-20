@@ -20,13 +20,14 @@
  * @brief
  *****************************************************************************/
 static bool drv_bus_is_ready = false;
-
+static bool flag_transmit    = false;
+static bool flag_receive     = false;
 static usart_handle_t drv_bus_handle;
 
 /******************************************************************************
  * @brief
  *****************************************************************************/
-void drv_bus_init_master ( DRV_BUS_CALLBACK uart_callback )
+void drv_bus_init_master ( void )
 {
     if ( false == drv_bus_is_ready )
     {
@@ -45,7 +46,8 @@ void drv_bus_init_master ( DRV_BUS_CALLBACK uart_callback )
         satellite_uart_config.enableTx     = true;
         satellite_uart_config.enableRx     = true;
 
-        USART_Init ( DRV_BUS_UART_SAT_ID, &satellite_uart_config, CLOCK_GetFlexCommClkFreq(0U) );
+        USART_Init ( DRV_BUS_UART_SAT_ID, &satellite_uart_config, CLOCK_GetFlexCommClkFreq(7U) );
+
         //USART_Enable9bitMode ( DRV_BUS_UART_SAT_ID, true );
 
         // Configure Master address
@@ -55,7 +57,7 @@ void drv_bus_init_master ( DRV_BUS_CALLBACK uart_callback )
         USART_EnableMatchAddress ( DRV_BUS_UART_SAT_ID, true );
 
         // Create usart handle
-        USART_TransferCreateHandle ( DRV_BUS_UART_SAT_ID, &drv_bus_handle, uart_callback, NULL );
+        USART_TransferCreateHandle ( DRV_BUS_UART_SAT_ID, &drv_bus_handle, drv_bus_uart_callback, NULL );
 
         drv_bus_is_ready = true;
     }
@@ -66,7 +68,7 @@ void drv_bus_init_master ( DRV_BUS_CALLBACK uart_callback )
  *****************************************************************************/
 void drv_bus_transmit_start ( void )
 {
-    GPIO_PinWrite ( GPIO, BOARD_INITPINS_UART_SAT_DE_PORT, BOARD_INITPINS_UART_SAT_DE_PIN, 0 );
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_UART_SAT_DE_PORT, BOARD_INITPINS_UART_SAT_DE_PIN, 1 );
 }
 
 /******************************************************************************
@@ -74,7 +76,7 @@ void drv_bus_transmit_start ( void )
  *****************************************************************************/
 void drv_bus_transmit_end ( void )
 {
-    GPIO_PinWrite ( GPIO, BOARD_INITPINS_UART_SAT_DE_PORT, BOARD_INITPINS_UART_SAT_DE_PIN, 1 );
+    GPIO_PinWrite ( GPIO, BOARD_INITPINS_UART_SAT_DE_PORT, BOARD_INITPINS_UART_SAT_DE_PIN, 0 );
 }
 
 /******************************************************************************
@@ -109,4 +111,46 @@ void drv_bus_receive_run ( uint8_t* buffer, size_t lenght )
 void drv_bus_send_to_slave ( uint16_t slave_addr )
 {
     USART_SendAddress ( DRV_BUS_UART_SAT_ID, slave_addr );
+}
+
+/*******************************************************************************
+ * @brief
+ ******************************************************************************/
+void drv_bus_uart_callback ( USART_Type *base, usart_handle_t *handle, status_t status, void *user_data )
+{
+    if ( kStatus_USART_TxIdle == status )
+    {
+        flag_transmit = true;
+    }
+
+    if ( kStatus_USART_RxIdle == status )
+    {
+        flag_receive = true;
+    }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void drv_bus_transmit ( void )
+{
+    // TODO : remove blocking procedure
+    // tip : use freertos peripheral option
+
+    while ( flag_transmit == false ) { }
+
+    flag_transmit = false;
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void drv_bus_receive ( void )
+{
+    // TODO : remove blocking procedure
+    // tip : use freertos peripheral option
+
+    while ( flag_receive == false ) { }
+
+    flag_receive = false;
 }

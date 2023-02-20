@@ -16,10 +16,10 @@
 
 #define APP_SATELLITE_PRIORITY          3U
 #define APP_SATELLITE_PERIOD_MS         (500U)
-#define APP_SATELLITE_STEP_DELTA        5555U   // must be changed
-#define APP_SATELLITE_STEP_TOL          44U     // must be changed
-#define APP_SATELLITE_STEP_REF_MIN      333U    // must be changed
-#define APP_SATELLITE_STEP_REF_MAX      99999U  // must be changed
+#define APP_SATELLITE_STEP_DELTA        60U   // must be changed
+#define APP_SATELLITE_STEP_TOL          2U     // must be changed
+#define APP_SATELLITE_STEP_REF_MIN      0U    // must be changed
+#define APP_SATELLITE_STEP_REF_MAX      255U  // must be changed
 #define APP_SATELLITE_NB_READ_FOR_REF   3U
 
 enum APP_SATELLITE_WATER_SETTING
@@ -72,6 +72,10 @@ void app_satellite_update_encoder_af        ( void );
 void app_satellite_update_encoder_pz        ( void );
 void app_satellite_update_holder_af         ( void );
 void app_satellite_update_holder_pz         ( void );
+void app_satellite_cmd_light_pz_on_off      ( bool on_off );
+void app_satellite_rfid_af                  ( void );
+void app_satellite_hall_af                  ( void );
+void app_satellite_detect_af                ( void );
 void app_satellite_take_step_reference_af   ( void );
 void app_satellite_take_step_reference_pz   ( void );
 void app_satellite_compute_water_setting_af ( void );
