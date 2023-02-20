@@ -28,11 +28,12 @@ static APP_SATELLITE_CTX app_satellite_ctx;
 static void app_satellite_heartbeat ( void *pvParameters )
 {
     lib_alim_enable ();
+    //app_satellite_cmd_light_pz_on_off ( false );
 
     while (1)
     {
         // Airflow management
-        app_satellite_update_encoder_af ();
+        /*app_satellite_update_encoder_af ();
 
         if ( false == app_satellite_ctx.airflow.encoder.has_ref )
         {
@@ -58,8 +59,18 @@ static void app_satellite_heartbeat ( void *pvParameters )
 
             app_satellite_update_holder_pz ();
 
-            app_satellite_cmd_light_pz ();
-        }
+            app_satellite_cmd_light_pz_on_off ( true );
+        }*/
+
+        ////////////////////////////////////////////////////////////////////////
+        vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
+        app_satellite_cmd_light_pz_on_off ( true );
+
+        vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
+        //app_satellite_update_encoder_af();
+        ////////////////////////////////////////////////////////////////////////
 
         vTaskDelay ( APP_SATELLITE_PERIOD_MS );
     }
@@ -100,7 +111,7 @@ void app_satellite_update_holder_af ( void )
 
         if ( app_satellite_ctx.airflow.holder.status > LIB_REMOTE_AF_HOLDER_UNDEF )
         {
-            app_satellite_ctx.airflow.encoder.cpt++;
+            app_satellite_ctx.airflow.holder.cpt++;
         }
     }
 }
@@ -132,7 +143,7 @@ void app_satellite_update_holder_pz ( void )
     LIB_REMOTE_PZ_LL_REQ  msg_to_piezon;
     LIB_REMOTE_PZ_LL_RESP msg_from_piezon;
 
-    if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_HOLDER, &msg_to_piezon, &msg_from_piezon ) )
+    if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_HOLDER, &msg_to_piezon, &msg_from_piezon ) )
     {
         app_satellite_ctx.piezon.holder.status = lib_remote_pz_extract_holder_status ( msg_from_piezon.data );
         app_satellite_ctx.piezon.holder.conn   = lib_remote_pz_extract_holder_conn   ( msg_from_piezon.data );
@@ -140,7 +151,7 @@ void app_satellite_update_holder_pz ( void )
 
         if ( app_satellite_ctx.piezon.holder.status > LIB_REMOTE_AF_HOLDER_UNDEF )
         {
-            app_satellite_ctx.piezon.encoder.cpt++;
+            app_satellite_ctx.piezon.holder.cpt++;
         }
     }
 }
@@ -148,12 +159,103 @@ void app_satellite_update_holder_pz ( void )
 /******************************************************************************
  * @brief
  *****************************************************************************/
-void app_satellite_cmd_light_pz ( void )
+void app_satellite_cmd_light_pz_on_off ( bool on_off )
 {
     LIB_REMOTE_PZ_LL_REQ  msg_to_piezon;
     LIB_REMOTE_PZ_LL_RESP msg_from_piezon;
 
-    lib_remote_af_request ( LIB_REMOTE_AF_REQ_LED_ON, &msg_to_piezon, &msg_from_piezon );
+    if ( true == on_off )
+    {
+        lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_LED_ON, &msg_to_piezon, &msg_from_piezon );
+    }
+    else
+    {
+        lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_LED_OFF, &msg_to_piezon, &msg_from_piezon );
+    }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_rfid_af ( void )
+{
+    LIB_REMOTE_AF_LL_REQ  msg_to_airflow;
+    LIB_REMOTE_AF_LL_RESP msg_from_airflow;
+
+    if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_RFID, &msg_to_airflow, &msg_from_airflow ) )
+    {
+        ;
+    }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_hall_af ( void )
+{
+    LIB_REMOTE_AF_LL_REQ  msg_to_airflow;
+    LIB_REMOTE_AF_LL_RESP msg_from_airflow;
+
+    if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_VOLT, &msg_to_airflow, &msg_from_airflow ) )
+    {
+        ;
+    }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_detect_af ( void )
+{
+    LIB_REMOTE_AF_LL_REQ  msg_to_airflow;
+    LIB_REMOTE_AF_LL_RESP msg_from_airflow;
+
+    if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_DETECT, &msg_to_airflow, &msg_from_airflow ) )
+    {
+        ;
+    }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_rfid_pz ( void )
+{
+    LIB_REMOTE_PZ_LL_REQ  msg_to_piezon;
+    LIB_REMOTE_PZ_LL_RESP msg_from_piezon;
+
+    if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_RFID, &msg_to_piezon, &msg_from_piezon ) )
+    {
+        ;
+    }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_hall_pz ( void )
+{
+    LIB_REMOTE_PZ_LL_REQ  msg_to_piezon;
+    LIB_REMOTE_PZ_LL_RESP msg_from_piezon;
+
+    if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_VOLT, &msg_to_piezon, &msg_from_piezon ) )
+    {
+        ;
+    }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_detect_pz ( void )
+{
+    LIB_REMOTE_PZ_LL_REQ  msg_to_piezon;
+    LIB_REMOTE_PZ_LL_RESP msg_from_piezon;
+
+    if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_DETECT, &msg_to_piezon, &msg_from_piezon ) )
+    {
+        ;
+    }
 }
 
 /******************************************************************************
@@ -285,6 +387,8 @@ bool app_satellite_init ( QueueHandle_t* app_satellite_handle )
         *app_satellite_handle = app_satellite_ctx.handle;
 
         lib_remote_af_init ();
+
+        lib_remote_pz_init ();
 
         lib_alim_init ();
     }

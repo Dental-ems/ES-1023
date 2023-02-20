@@ -44,10 +44,6 @@ void drv_io_init ( void )
         GPIO_PortInit ( GPIO, BOARD_INITPINS_UART_SAT_DE_GPIO );
 #endif
 
-        // Port masking
-        //GPIO_PortMaskedSet   ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0x0000FFFF );
-        //GPIO_PortMaskedWrite ( GPIO, BOARD_INITPINS_LED_MAIN_PORT, 0xFFFFFFFF );
-
         drv_io_is_ready = true;
     }
 }
