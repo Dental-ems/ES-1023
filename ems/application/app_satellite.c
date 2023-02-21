@@ -51,6 +51,18 @@ static void app_satellite_heartbeat ( void *pvParameters )
             vTaskDelay ( APP_SATELLITE_PERIOD_MS );
 
             app_satellite_update_holder_af ();
+
+            vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
+            app_satellite_rfid_af ();
+
+            vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
+            app_satellite_hall_af ();
+
+            vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
+            app_satellite_detect_af ();
         }
 
         vTaskDelay ( APP_SATELLITE_PERIOD_MS );
@@ -73,6 +85,18 @@ static void app_satellite_heartbeat ( void *pvParameters )
             vTaskDelay ( APP_SATELLITE_PERIOD_MS );
 
             app_satellite_cmd_light_pz_on_off ( true );
+
+            vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
+            app_satellite_rfid_pz ();
+
+            vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
+            app_satellite_hall_pz ();
+
+            vTaskDelay ( APP_SATELLITE_PERIOD_MS );
+
+            app_satellite_detect_pz ();
         }
 
         vTaskDelay ( APP_SATELLITE_PERIOD_MS );
@@ -181,7 +205,9 @@ void app_satellite_rfid_af ( void )
 
     if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_RFID, &msg_to_airflow, &msg_from_airflow ) )
     {
-        ;
+        app_satellite_ctx.airflow.rfid.status = lib_remote_af_extract_rfid_status ( msg_from_airflow.data );
+
+        app_satellite_ctx.airflow.rfid.cpt++;
     }
 }
 
@@ -195,7 +221,9 @@ void app_satellite_hall_af ( void )
 
     if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_VOLT, &msg_to_airflow, &msg_from_airflow ) )
     {
-        ;
+        app_satellite_ctx.airflow.hall.voltage = lib_remote_af_extract_hall_voltage ( msg_from_airflow.data );
+
+        app_satellite_ctx.airflow.hall.cpt++;
     }
 }
 
@@ -209,7 +237,9 @@ void app_satellite_detect_af ( void )
 
     if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_DETECT, &msg_to_airflow, &msg_from_airflow ) )
     {
-        ;
+        app_satellite_ctx.airflow.detect.voltage = lib_remote_af_extract_detect_voltage ( msg_from_airflow.data );
+
+        app_satellite_ctx.airflow.detect.cpt++;
     }
 }
 
@@ -223,7 +253,9 @@ void app_satellite_rfid_pz ( void )
 
     if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_RFID, &msg_to_piezon, &msg_from_piezon ) )
     {
-        ;
+        app_satellite_ctx.piezon.rfid.status = lib_remote_af_extract_rfid_status ( msg_from_piezon.data );
+
+        app_satellite_ctx.piezon.rfid.cpt++;
     }
 }
 
@@ -237,7 +269,9 @@ void app_satellite_hall_pz ( void )
 
     if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_VOLT, &msg_to_piezon, &msg_from_piezon ) )
     {
-        ;
+        app_satellite_ctx.piezon.hall.voltage = lib_remote_af_extract_hall_voltage ( msg_from_piezon.data );
+
+        app_satellite_ctx.piezon.hall.cpt++;
     }
 }
 
@@ -251,7 +285,9 @@ void app_satellite_detect_pz ( void )
 
     if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_DETECT, &msg_to_piezon, &msg_from_piezon ) )
     {
-        ;
+        app_satellite_ctx.piezon.detect.voltage = lib_remote_af_extract_detect_voltage ( msg_from_piezon.data );
+
+        app_satellite_ctx.piezon.detect.cpt++;
     }
 }
 
@@ -260,7 +296,12 @@ void app_satellite_detect_pz ( void )
  *****************************************************************************/
 void app_satellite_compute_water_setting_af ( void )
 {
-    uint8_t value_normalized = ((uint16_t)( app_satellite_ctx.airflow.encoder.raw - app_satellite_ctx.airflow.encoder.offset ) + APP_SATELLITE_STEP_DIM ) & 0xFF;
+    int16_t value_normalized = 0;
+
+    value_normalized = (int16_t)( app_satellite_ctx.airflow.encoder.raw - app_satellite_ctx.airflow.encoder.offset );
+    value_normalized *= APP_SATELLITE_STEP_CW_COEF;
+    value_normalized += APP_SATELLITE_STEP_DIM;
+    value_normalized &= 0xFF;
 
     app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_UNDEF;
 
@@ -314,7 +355,12 @@ void app_satellite_offset_af ( void )
  *****************************************************************************/
 void app_satellite_compute_water_setting_pz ( void )
 {
-    uint8_t value_normalized = ((uint16_t)( app_satellite_ctx.piezon.encoder.raw - app_satellite_ctx.piezon.encoder.offset ) + APP_SATELLITE_STEP_DIM ) & 0xFF;
+    int16_t value_normalized = 0;
+
+    value_normalized = (int16_t)( app_satellite_ctx.piezon.encoder.raw - app_satellite_ctx.piezon.encoder.offset );
+    value_normalized *= APP_SATELLITE_STEP_CW_ANTI;
+    value_normalized += APP_SATELLITE_STEP_DIM;
+    value_normalized &= 0xFF;
 
     app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_UNDEF;
 

@@ -103,6 +103,30 @@ uint8_t lib_remote_pz_extract_holder_rfid ( uint8_t* data )
 /******************************************************************************
  * @brief
  *****************************************************************************/
+uint8_t lib_remote_pz_extract_rfid_status ( uint8_t* data )
+{
+    return lib_remote_af_extract_rfid_status ( data );
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+uint32_t lib_remote_pz_extract_hall_voltage ( uint8_t* data )
+{
+    return lib_remote_af_extract_hall_voltage ( data );
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+uint32_t lib_remote_pz_extract_detect_voltage ( uint8_t* data )
+{
+    return lib_remote_af_extract_detect_voltage ( data );
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
 uint8_t lib_remote_pz_checksum ( uint8_t* trame, uint8_t size )
 {
     return lib_remote_af_checksum ( trame, size );

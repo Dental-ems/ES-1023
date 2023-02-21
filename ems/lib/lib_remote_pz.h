@@ -36,15 +36,18 @@ typedef LIB_REMOTE_AF_LL_REQ    LIB_REMOTE_PZ_LL_REQ;
 typedef LIB_REMOTE_AF_LL_RESP   LIB_REMOTE_PZ_LL_RESP;
 typedef LIB_REMOTE_AF_CTX       LIB_REMOTE_PZ_CTX;
 
-void    lib_remote_pz_init                  ( void );
-void    lib_remote_pz_exchange              ( uint8_t* data_buf_req, uint8_t* data_buf_resp );
-bool    lib_remote_pz_encode                ( LIB_REMOTE_PZ_LL_REQ*  msg_to_encode, uint8_t version );
-bool    lib_remote_pz_decode                ( LIB_REMOTE_PZ_LL_RESP* msg_to_decode );
-uint8_t lib_remote_pz_checksum              ( uint8_t* trame, uint8_t size );
-uint8_t lib_remote_pz_extract_encoder       ( uint8_t* data );
-uint8_t lib_remote_pz_extract_holder_status ( uint8_t* data );
-uint8_t lib_remote_pz_extract_holder_conn   ( uint8_t* data );
-uint8_t lib_remote_pz_extract_holder_rfid   ( uint8_t* data );
-bool    lib_remote_pz_request               ( uint8_t req_type, LIB_REMOTE_PZ_LL_REQ* msg_req, LIB_REMOTE_PZ_LL_RESP* msg_resp );
+void     lib_remote_pz_init                   ( void );
+void     lib_remote_pz_exchange               ( uint8_t* data_buf_req, uint8_t* data_buf_resp );
+bool     lib_remote_pz_encode                 ( LIB_REMOTE_PZ_LL_REQ*  msg_to_encode, uint8_t version );
+bool     lib_remote_pz_decode                 ( LIB_REMOTE_PZ_LL_RESP* msg_to_decode );
+uint8_t  lib_remote_pz_checksum               ( uint8_t* trame, uint8_t size );
+uint8_t  lib_remote_pz_extract_encoder        ( uint8_t* data );
+uint8_t  lib_remote_pz_extract_holder_status  ( uint8_t* data );
+uint8_t  lib_remote_pz_extract_holder_conn    ( uint8_t* data );
+uint8_t  lib_remote_pz_extract_holder_rfid    ( uint8_t* data );
+uint8_t  lib_remote_pz_extract_rfid_status    ( uint8_t* data );
+uint32_t lib_remote_pz_extract_hall_voltage   ( uint8_t* data );
+uint32_t lib_remote_pz_extract_detect_voltage ( uint8_t* data );
+bool     lib_remote_pz_request                ( uint8_t req_type, LIB_REMOTE_PZ_LL_REQ* msg_req, LIB_REMOTE_PZ_LL_RESP* msg_resp );
 
 #endif /* LIB_REMOTE_PZ_H_ */

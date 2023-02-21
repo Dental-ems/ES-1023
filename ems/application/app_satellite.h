@@ -16,12 +16,14 @@
 
 #define APP_SATELLITE_PRIORITY          3U
 
-#define APP_SATELLITE_PERIOD_MS         (500U)
+#define APP_SATELLITE_PERIOD_MS         (200U)
 
 #define APP_SATELLITE_STEP_DELTA        80U
 #define APP_SATELLITE_STEP_REF_MIN      10U
 #define APP_SATELLITE_STEP_REF_MAX      250U
 #define APP_SATELLITE_STEP_DIM          256U
+#define APP_SATELLITE_STEP_CW_COEF      (-1)
+#define APP_SATELLITE_STEP_CW_ANTI      (1)
 
 #define APP_SATELLITE_REF_NB_READ      3U
 
@@ -57,8 +59,29 @@ typedef struct
 
 typedef struct
 {
+    uint32_t cpt;
+    uint8_t  status;
+} APP_SATELLITE_RFID;
+
+typedef struct
+{
+    uint32_t cpt;
+    uint32_t voltage;
+} APP_SATELLITE_HALL;
+
+typedef struct
+{
+    uint32_t cpt;
+    uint32_t voltage;
+} APP_SATELLITE_DETECT;
+
+typedef struct
+{
     APP_SATELLITE_ENCODER encoder;
     APP_SATELLITE_HOLDER  holder;
+    APP_SATELLITE_RFID    rfid;
+    APP_SATELLITE_HALL    hall;
+    APP_SATELLITE_DETECT  detect;
     uint8_t               water_in_use;
 } APP_SATELLITE_ITEM;
 
@@ -76,8 +99,11 @@ void app_satellite_update_holder_af         ( void );
 void app_satellite_update_holder_pz         ( void );
 void app_satellite_cmd_light_pz_on_off      ( bool on_off );
 void app_satellite_rfid_af                  ( void );
+void app_satellite_rfid_pz                  ( void );
 void app_satellite_hall_af                  ( void );
+void app_satellite_hall_pz                  ( void );
 void app_satellite_detect_af                ( void );
+void app_satellite_detect_pz                ( void );
 void app_satellite_offset_af                ( void );
 void app_satellite_offset_pz                ( void );
 void app_satellite_compute_water_setting_af ( void );

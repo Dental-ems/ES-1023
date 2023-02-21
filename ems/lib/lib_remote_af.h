@@ -83,15 +83,18 @@ typedef struct
     ;
 } LIB_REMOTE_AF_CTX;
 
-void    lib_remote_af_init                  ( void );
-void    lib_remote_af_exchange              ( uint8_t* data_buf_req, uint8_t* data_buf_resp );
-bool    lib_remote_af_encode                ( LIB_REMOTE_AF_LL_REQ*  msg_to_encode, uint8_t version );
-bool    lib_remote_af_decode                ( LIB_REMOTE_AF_LL_RESP* msg_to_decode );
-uint8_t lib_remote_af_checksum              ( uint8_t* trame, uint8_t size );
-uint8_t lib_remote_af_extract_encoder       ( uint8_t* data );
-uint8_t lib_remote_af_extract_holder_status ( uint8_t* data );
-uint8_t lib_remote_af_extract_holder_conn   ( uint8_t* data );
-uint8_t lib_remote_af_extract_holder_rfid   ( uint8_t* data );
-bool    lib_remote_af_request               ( uint8_t req_type, LIB_REMOTE_AF_LL_REQ* msg_req, LIB_REMOTE_AF_LL_RESP* msg_resp );
+void     lib_remote_af_init                   ( void );
+void     lib_remote_af_exchange               ( uint8_t* data_buf_req, uint8_t* data_buf_resp );
+bool     lib_remote_af_encode                 ( LIB_REMOTE_AF_LL_REQ*  msg_to_encode, uint8_t version );
+bool     lib_remote_af_decode                 ( LIB_REMOTE_AF_LL_RESP* msg_to_decode );
+uint8_t  lib_remote_af_checksum               ( uint8_t* trame, uint8_t size );
+uint8_t  lib_remote_af_extract_encoder        ( uint8_t* data );
+uint8_t  lib_remote_af_extract_holder_status  ( uint8_t* data );
+uint8_t  lib_remote_af_extract_holder_conn    ( uint8_t* data );
+uint8_t  lib_remote_af_extract_holder_rfid    ( uint8_t* data );
+uint8_t  lib_remote_af_extract_rfid_status    ( uint8_t* data );
+uint32_t lib_remote_af_extract_hall_voltage   ( uint8_t* data );
+uint32_t lib_remote_af_extract_detect_voltage ( uint8_t* data );
+bool     lib_remote_af_request                ( uint8_t req_type, LIB_REMOTE_AF_LL_REQ* msg_req, LIB_REMOTE_AF_LL_RESP* msg_resp );
 
 #endif /* LIB_REMOTE_AF_H_ */
