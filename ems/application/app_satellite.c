@@ -42,7 +42,7 @@ static void app_satellite_heartbeat ( void *pvParameters )
 
         if ( false == app_satellite_ctx.airflow.encoder.has_ref )
         {
-            app_satellite_take_step_reference_af ();
+            app_satellite_offset_af ();
         }
         else
         {
@@ -60,7 +60,7 @@ static void app_satellite_heartbeat ( void *pvParameters )
 
         if ( false == app_satellite_ctx.piezon.encoder.has_ref )
         {
-            app_satellite_take_step_reference_pz ();
+            app_satellite_offset_pz ();
         }
         else
         {
@@ -91,10 +91,7 @@ void app_satellite_update_encoder_af ( void )
     {
         app_satellite_ctx.airflow.encoder.raw = lib_remote_af_extract_encoder ( msg_from_airflow.data );
 
-        if ( app_satellite_ctx.airflow.encoder.raw > APP_SATELLITE_STEP_TOL )
-        {
-            app_satellite_ctx.airflow.encoder.cpt++;
-        }
+        app_satellite_ctx.airflow.encoder.cpt++;
     }
 }
 
@@ -131,10 +128,7 @@ void app_satellite_update_encoder_pz ( void )
     {
         app_satellite_ctx.piezon.encoder.raw = lib_remote_pz_extract_encoder ( msg_from_piezon.data );
 
-        if ( app_satellite_ctx.piezon.encoder.raw > APP_SATELLITE_STEP_TOL )
-        {
-            app_satellite_ctx.piezon.encoder.cpt++;
-        }
+        app_satellite_ctx.piezon.encoder.cpt++;
     }
 }
 
@@ -266,85 +260,50 @@ void app_satellite_detect_pz ( void )
  *****************************************************************************/
 void app_satellite_compute_water_setting_af ( void )
 {
+    uint8_t value_normalized = ((uint16_t)( app_satellite_ctx.airflow.encoder.raw - app_satellite_ctx.airflow.encoder.offset ) + APP_SATELLITE_STEP_DIM ) & 0xFF;
+
     app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_UNDEF;
 
-    if ( app_satellite_ctx.airflow.encoder.raw <= app_satellite_ctx.airflow.encoder.low )
-    {
-        app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_LOW;
-    }
-
-    if ( app_satellite_ctx.airflow.encoder.raw >= ( app_satellite_ctx.airflow.encoder.step1 - APP_SATELLITE_STEP_TOL ) )
-    {
-        app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_01;
-    }
-
-    if ( app_satellite_ctx.airflow.encoder.raw >= ( app_satellite_ctx.airflow.encoder.step2 - APP_SATELLITE_STEP_TOL ) )
-    {
-        app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_02;
-    }
-
-    if ( app_satellite_ctx.airflow.encoder.raw >= ( app_satellite_ctx.airflow.encoder.step3 - APP_SATELLITE_STEP_TOL ) )
+    if ( value_normalized >= app_satellite_ctx.airflow.encoder.step3 )
     {
         app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_03;
     }
 
-    if ( app_satellite_ctx.airflow.encoder.raw >= app_satellite_ctx.airflow.encoder.high )
+    if ( value_normalized >= app_satellite_ctx.airflow.encoder.step2 )
     {
-        app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_HIGH;
+        app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_02;
+    }
+
+    if ( value_normalized >= app_satellite_ctx.airflow.encoder.step1 )
+    {
+        app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_01;
+    }
+
+    if ( value_normalized > app_satellite_ctx.airflow.encoder.over )
+    {
+        app_satellite_ctx.airflow.water_in_use = APP_SATELLITE_WATER_SETTING_OVER;
     }
 }
 
 /******************************************************************************
  * @brief
  *****************************************************************************/
-void app_satellite_compute_water_setting_pz ( void )
+void app_satellite_offset_af ( void )
 {
-    app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_UNDEF;
-
-    if ( app_satellite_ctx.piezon.encoder.raw <= app_satellite_ctx.piezon.encoder.low )
+    if ( app_satellite_ctx.airflow.encoder.cpt > APP_SATELLITE_REF_NB_READ )
     {
-        app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_LOW;
-    }
-
-    if ( app_satellite_ctx.piezon.encoder.raw >= ( app_satellite_ctx.piezon.encoder.step1 - APP_SATELLITE_STEP_TOL ) )
-    {
-        app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_01;
-    }
-
-    if ( app_satellite_ctx.piezon.encoder.raw >= ( app_satellite_ctx.piezon.encoder.step2 - APP_SATELLITE_STEP_TOL ) )
-    {
-        app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_02;
-    }
-
-    if ( app_satellite_ctx.piezon.encoder.raw >= ( app_satellite_ctx.piezon.encoder.step3 - APP_SATELLITE_STEP_TOL ) )
-    {
-        app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_03;
-    }
-
-    if ( app_satellite_ctx.piezon.encoder.raw >= app_satellite_ctx.piezon.encoder.high )
-    {
-        app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_HIGH;
-    }
-}
-
-/******************************************************************************
- * @brief
- *****************************************************************************/
-void app_satellite_take_step_reference_af ( void )
-{
-    if ( app_satellite_ctx.airflow.encoder.cpt > APP_SATELLITE_NB_READ_FOR_REF )
-    {
-        if ( ( app_satellite_ctx.airflow.encoder.raw > APP_SATELLITE_STEP_REF_MIN ) && ( app_satellite_ctx.airflow.encoder.raw < APP_SATELLITE_STEP_REF_MAX ) )
+        if ( ( app_satellite_ctx.airflow.encoder.raw >= APP_SATELLITE_STEP_REF_MIN ) && ( app_satellite_ctx.airflow.encoder.raw <= APP_SATELLITE_STEP_REF_MAX ) )
         {
-            // Compute step references for water settings
-            app_satellite_ctx.airflow.encoder.step3 = app_satellite_ctx.airflow.encoder.raw;
-            app_satellite_ctx.airflow.encoder.step2 = app_satellite_ctx.airflow.encoder.step3 - APP_SATELLITE_STEP_DELTA;
-            app_satellite_ctx.airflow.encoder.step1 = app_satellite_ctx.airflow.encoder.step2 - APP_SATELLITE_STEP_DELTA;
+            // Save offset from raw value
+            app_satellite_ctx.airflow.encoder.offset = app_satellite_ctx.airflow.encoder.raw;
 
-            // Compute limit lower and higher
-            app_satellite_ctx.airflow.encoder.low  = app_satellite_ctx.airflow.encoder.step1 - APP_SATELLITE_STEP_TOL;
-            app_satellite_ctx.airflow.encoder.high = app_satellite_ctx.airflow.encoder.step3 + APP_SATELLITE_STEP_TOL;
+            // Compute steps references
+            app_satellite_ctx.airflow.encoder.step3 = 0 * APP_SATELLITE_STEP_DELTA;
+            app_satellite_ctx.airflow.encoder.step2 = 1 * APP_SATELLITE_STEP_DELTA;
+            app_satellite_ctx.airflow.encoder.step1 = 2 * APP_SATELLITE_STEP_DELTA;
+            app_satellite_ctx.airflow.encoder.over  = 3 * APP_SATELLITE_STEP_DELTA;
 
+            // Done
             app_satellite_ctx.airflow.encoder.has_ref = true;
         }
     }
@@ -353,21 +312,52 @@ void app_satellite_take_step_reference_af ( void )
 /******************************************************************************
  * @brief
  *****************************************************************************/
-void app_satellite_take_step_reference_pz ( void )
+void app_satellite_compute_water_setting_pz ( void )
 {
-    if ( app_satellite_ctx.piezon.encoder.cpt > APP_SATELLITE_NB_READ_FOR_REF )
+    uint8_t value_normalized = ((uint16_t)( app_satellite_ctx.piezon.encoder.raw - app_satellite_ctx.piezon.encoder.offset ) + APP_SATELLITE_STEP_DIM ) & 0xFF;
+
+    app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_UNDEF;
+
+    if ( value_normalized >= app_satellite_ctx.piezon.encoder.step3 )
     {
-        if ( ( app_satellite_ctx.piezon.encoder.raw > APP_SATELLITE_STEP_REF_MIN ) && ( app_satellite_ctx.piezon.encoder.raw < APP_SATELLITE_STEP_REF_MAX ) )
+        app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_03;
+    }
+
+    if ( value_normalized >= app_satellite_ctx.piezon.encoder.step2 )
+    {
+        app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_02;
+    }
+
+    if ( value_normalized >= app_satellite_ctx.piezon.encoder.step1 )
+    {
+        app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_01;
+    }
+
+    if ( value_normalized > app_satellite_ctx.piezon.encoder.over )
+    {
+        app_satellite_ctx.piezon.water_in_use = APP_SATELLITE_WATER_SETTING_OVER;
+    }
+}
+
+/******************************************************************************
+ * @brief
+ *****************************************************************************/
+void app_satellite_offset_pz ( void )
+{
+    if ( app_satellite_ctx.piezon.encoder.cpt > APP_SATELLITE_REF_NB_READ )
+    {
+        if ( ( app_satellite_ctx.piezon.encoder.raw >= APP_SATELLITE_STEP_REF_MIN ) && ( app_satellite_ctx.piezon.encoder.raw <= APP_SATELLITE_STEP_REF_MAX ) )
         {
-            // Compute step references for water settings
-            app_satellite_ctx.piezon.encoder.step3 = app_satellite_ctx.piezon.encoder.raw;
-            app_satellite_ctx.piezon.encoder.step2 = app_satellite_ctx.piezon.encoder.step3 - APP_SATELLITE_STEP_DELTA;
-            app_satellite_ctx.piezon.encoder.step1 = app_satellite_ctx.piezon.encoder.step2 - APP_SATELLITE_STEP_DELTA;
+            // Save offset from raw value
+            app_satellite_ctx.piezon.encoder.offset = app_satellite_ctx.piezon.encoder.raw;
 
-            // Compute limit lower and higher
-            app_satellite_ctx.piezon.encoder.low  = app_satellite_ctx.piezon.encoder.step1 - APP_SATELLITE_STEP_TOL;
-            app_satellite_ctx.piezon.encoder.high = app_satellite_ctx.piezon.encoder.step3 + APP_SATELLITE_STEP_TOL;
+            // Compute steps references
+            app_satellite_ctx.piezon.encoder.step3 = 0 * APP_SATELLITE_STEP_DELTA;
+            app_satellite_ctx.piezon.encoder.step2 = 1 * APP_SATELLITE_STEP_DELTA;
+            app_satellite_ctx.piezon.encoder.step1 = 2 * APP_SATELLITE_STEP_DELTA;
+            app_satellite_ctx.piezon.encoder.over  = 3 * APP_SATELLITE_STEP_DELTA;
 
+            // Done
             app_satellite_ctx.piezon.encoder.has_ref = true;
         }
     }
