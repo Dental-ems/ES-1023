@@ -11,7 +11,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "../lib/lib_alim.h"
+#include "lib_alim.h"
 
 /******************************************************************************
  * @brief

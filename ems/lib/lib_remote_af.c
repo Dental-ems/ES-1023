@@ -11,7 +11,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "../lib/lib_remote_af.h"
+#include "lib_remote_af.h"
 
 /******************************************************************************
  * @brief

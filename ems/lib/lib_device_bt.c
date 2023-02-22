@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "../lib/lib_device_bt.h"
+#include "lib_device_bt.h"
 
 /******************************************************************************
  * @brief Variables

@@ -11,7 +11,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "../lib/lib_led_mb.h"
+#include "lib_led_mb.h"
 
 /******************************************************************************
  * @brief
