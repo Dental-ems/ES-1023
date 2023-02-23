@@ -20,7 +20,7 @@
  * @brief
  *****************************************************************************/
 static bool drv_bus_is_ready = false;
-static bool flag_transmit    = false;
+static bool flag_send        = false;
 static bool flag_receive     = false;
 static usart_handle_t drv_bus_handle;
 
@@ -57,7 +57,7 @@ void drv_bus_init_master ( void )
         USART_EnableMatchAddress ( DRV_BUS_UART_SAT_ID, true );
 
         // Create usart handle
-        USART_TransferCreateHandle ( DRV_BUS_UART_SAT_ID, &drv_bus_handle, drv_bus_uart_callback, NULL );
+        USART_TransferCreateHandle ( DRV_BUS_UART_SAT_ID, &drv_bus_handle, drv_bus_transmit_callback, NULL );
 
         drv_bus_is_ready = true;
     }
@@ -82,20 +82,28 @@ void drv_bus_transmit_end ( void )
 /******************************************************************************
  * @brief
  *****************************************************************************/
-void drv_bus_transmit_run ( uint8_t* buffer, size_t lenght )
+void drv_bus_transmit_send ( uint8_t* buffer, size_t lenght )
 {
-    usart_transfer_t drv_bus_transmit;
+    // Open transmit window
+    drv_bus_transmit_start ();
 
-    drv_bus_transmit.data     = buffer;
-    drv_bus_transmit.dataSize = lenght;
+    usart_transfer_t drv_bus_sender;
 
-    USART_TransferSendNonBlocking ( DRV_BUS_UART_SAT_ID, &drv_bus_handle, &drv_bus_transmit );
+    drv_bus_sender.data     = buffer;
+    drv_bus_sender.dataSize = lenght;
+
+    USART_TransferSendNonBlocking ( DRV_BUS_UART_SAT_ID, &drv_bus_handle, &drv_bus_sender );
+
+    drv_bus_send_run ();
+
+    // Close transmit window
+    drv_bus_transmit_end ();
 }
 
 /******************************************************************************
  * @brief
  *****************************************************************************/
-void drv_bus_receive_run ( uint8_t* buffer, size_t lenght )
+void drv_bus_transmit_receive ( uint8_t* buffer, size_t lenght )
 {
     usart_transfer_t drv_bus_receiver;
 
@@ -103,6 +111,8 @@ void drv_bus_receive_run ( uint8_t* buffer, size_t lenght )
     drv_bus_receiver.dataSize = lenght;
 
     USART_TransferReceiveNonBlocking ( DRV_BUS_UART_SAT_ID, &drv_bus_handle, &drv_bus_receiver, NULL );
+
+    drv_bus_receive_run ();
 }
 
 /******************************************************************************
@@ -116,11 +126,11 @@ void drv_bus_send_to_slave ( uint16_t slave_addr )
 /*******************************************************************************
  * @brief
  ******************************************************************************/
-void drv_bus_uart_callback ( USART_Type *base, usart_handle_t *handle, status_t status, void *user_data )
+void drv_bus_transmit_callback ( USART_Type *base, usart_handle_t *handle, status_t status, void *user_data )
 {
     if ( kStatus_USART_TxIdle == status )
     {
-        flag_transmit = true;
+        flag_send = true;
     }
 
     if ( kStatus_USART_RxIdle == status )
@@ -132,20 +142,20 @@ void drv_bus_uart_callback ( USART_Type *base, usart_handle_t *handle, status_t 
 /******************************************************************************
  * @brief
  *****************************************************************************/
-void drv_bus_transmit ( void )
+void drv_bus_send_run ( void )
 {
     // TODO : remove blocking procedure
     // tip : use freertos peripheral option
 
-    while ( flag_transmit == false ) { }
+    while ( flag_send == false ) { }
 
-    flag_transmit = false;
+    flag_send = false;
 }
 
 /******************************************************************************
  * @brief
  *****************************************************************************/
-void drv_bus_receive ( void )
+void drv_bus_receive_run ( void )
 {
     // TODO : remove blocking procedure
     // tip : use freertos peripheral option

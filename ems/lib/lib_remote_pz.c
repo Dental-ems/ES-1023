@@ -33,23 +33,13 @@ void lib_remote_pz_init ( void )
  ******************************************************************************/
 void lib_remote_pz_exchange ( uint8_t* data_buf_req, uint8_t* data_buf_resp )
 {
-    // Open transmitter
-    drv_bus_transmit_start ();
+    drv_bus_send_to_slave ( DRV_BUS_ADDR_SLAVE_PZ );
 
     // Write data on transmitter
-    drv_bus_transmit_run ( data_buf_req, LIB_REMOTE_PZ_TRAME_LEN_REQ );
-
-    // Start transmitting
-    drv_bus_transmit ();
-
-    // Close transmitter
-    drv_bus_transmit_end ();
+    drv_bus_transmit_send ( data_buf_req, LIB_REMOTE_PZ_TRAME_LEN_REQ );
 
     // Start receiving
-    drv_bus_receive_run ( data_buf_resp, LIB_REMOTE_PZ_TRAME_LEN_RESP );
-
-    // Waiting for response
-    drv_bus_receive ();
+    drv_bus_transmit_receive ( data_buf_resp, LIB_REMOTE_PZ_TRAME_LEN_RESP );
 }
 
 /******************************************************************************
@@ -79,9 +69,9 @@ uint8_t lib_remote_pz_extract_encoder ( uint8_t* data )
 /******************************************************************************
  * @brief
  *****************************************************************************/
-uint8_t lib_remote_pz_extract_holder_status ( uint8_t* data )
+uint8_t lib_remote_pz_extract_holder_hook ( uint8_t* data )
 {
-    return lib_remote_af_extract_holder_status ( data );
+    return lib_remote_af_extract_holder_hook ( data );
 }
 
 /******************************************************************************
@@ -103,9 +93,9 @@ uint8_t lib_remote_pz_extract_holder_rfid ( uint8_t* data )
 /******************************************************************************
  * @brief
  *****************************************************************************/
-uint8_t lib_remote_pz_extract_rfid_status ( uint8_t* data )
+uint8_t lib_remote_pz_extract_rfid_state ( uint8_t* data )
 {
-    return lib_remote_af_extract_rfid_status ( data );
+    return lib_remote_af_extract_rfid_state ( data );
 }
 
 /******************************************************************************

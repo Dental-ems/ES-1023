@@ -20,14 +20,18 @@
 
 typedef void (*DRV_BUS_CALLBACK)( USART_Type *base, usart_handle_t *handle, status_t status, void *userData );
 
-void drv_bus_init_master    ( void );
-void drv_bus_transmit       ( void );
-void drv_bus_receive        ( void );
-void drv_bus_transmit_start ( void );
-void drv_bus_transmit_end   ( void );
-void drv_bus_transmit_run   ( uint8_t* buffer, size_t lenght );
-void drv_bus_receive_run    ( uint8_t* buffer, size_t lenght );
-void drv_bus_send_to_slave  ( uint16_t slave_addr );
-void drv_bus_uart_callback  ( USART_Type *base, usart_handle_t *handle, status_t status, void *user_data );
+void drv_bus_init_master       ( void );
+
+void drv_bus_send_run          ( void );
+void drv_bus_receive_run       ( void );
+
+void drv_bus_transmit_start    ( void );
+void drv_bus_transmit_end      ( void );
+
+void drv_bus_transmit_send     ( uint8_t* buffer, size_t lenght );
+void drv_bus_transmit_receive  ( uint8_t* buffer, size_t lenght );
+
+void drv_bus_send_to_slave     ( uint16_t slave_addr );
+void drv_bus_transmit_callback ( USART_Type *base, usart_handle_t *handle, status_t status, void *user_data );
 
 #endif /* DRV_BUS_H_ */

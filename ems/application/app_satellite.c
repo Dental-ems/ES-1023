@@ -129,11 +129,11 @@ void app_satellite_update_holder_af ( void )
 
     if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_HOLDER, &msg_to_airflow, &msg_from_airflow ) )
     {
-        app_satellite_ctx.airflow.holder.status = lib_remote_af_extract_holder_status ( msg_from_airflow.data );
-        app_satellite_ctx.airflow.holder.conn   = lib_remote_af_extract_holder_conn   ( msg_from_airflow.data );
-        app_satellite_ctx.airflow.holder.rfid   = lib_remote_af_extract_holder_rfid   ( msg_from_airflow.data );
+        app_satellite_ctx.airflow.holder.hook = lib_remote_af_extract_holder_hook ( msg_from_airflow.data );
+        app_satellite_ctx.airflow.holder.conn = lib_remote_af_extract_holder_conn ( msg_from_airflow.data );
+        app_satellite_ctx.airflow.holder.rfid = lib_remote_af_extract_holder_rfid ( msg_from_airflow.data );
 
-        if ( app_satellite_ctx.airflow.holder.status > LIB_REMOTE_AF_HOLDER_UNDEF )
+        if ( app_satellite_ctx.airflow.holder.hook > LIB_REMOTE_AF_HOLDER_UNDEF )
         {
             app_satellite_ctx.airflow.holder.cpt++;
         }
@@ -166,11 +166,11 @@ void app_satellite_update_holder_pz ( void )
 
     if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_HOLDER, &msg_to_piezon, &msg_from_piezon ) )
     {
-        app_satellite_ctx.piezon.holder.status = lib_remote_pz_extract_holder_status ( msg_from_piezon.data );
-        app_satellite_ctx.piezon.holder.conn   = lib_remote_pz_extract_holder_conn   ( msg_from_piezon.data );
-        app_satellite_ctx.piezon.holder.rfid   = lib_remote_pz_extract_holder_rfid   ( msg_from_piezon.data );
+        app_satellite_ctx.piezon.holder.hook = lib_remote_pz_extract_holder_hook ( msg_from_piezon.data );
+        app_satellite_ctx.piezon.holder.conn = lib_remote_pz_extract_holder_conn ( msg_from_piezon.data );
+        app_satellite_ctx.piezon.holder.rfid = lib_remote_pz_extract_holder_rfid ( msg_from_piezon.data );
 
-        if ( app_satellite_ctx.piezon.holder.status > LIB_REMOTE_AF_HOLDER_UNDEF )
+        if ( app_satellite_ctx.piezon.holder.hook > LIB_REMOTE_AF_HOLDER_UNDEF )
         {
             app_satellite_ctx.piezon.holder.cpt++;
         }
@@ -205,7 +205,7 @@ void app_satellite_rfid_af ( void )
 
     if ( true == lib_remote_af_request ( LIB_REMOTE_AF_REQ_RFID, &msg_to_airflow, &msg_from_airflow ) )
     {
-        app_satellite_ctx.airflow.rfid.status = lib_remote_af_extract_rfid_status ( msg_from_airflow.data );
+        app_satellite_ctx.airflow.rfid.status = lib_remote_af_extract_rfid_state ( msg_from_airflow.data );
 
         app_satellite_ctx.airflow.rfid.cpt++;
     }
@@ -253,7 +253,7 @@ void app_satellite_rfid_pz ( void )
 
     if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_RFID, &msg_to_piezon, &msg_from_piezon ) )
     {
-        app_satellite_ctx.piezon.rfid.status = lib_remote_af_extract_rfid_status ( msg_from_piezon.data );
+        app_satellite_ctx.piezon.rfid.status = lib_remote_pz_extract_rfid_state ( msg_from_piezon.data );
 
         app_satellite_ctx.piezon.rfid.cpt++;
     }
@@ -269,7 +269,7 @@ void app_satellite_hall_pz ( void )
 
     if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_VOLT, &msg_to_piezon, &msg_from_piezon ) )
     {
-        app_satellite_ctx.piezon.hall.voltage = lib_remote_af_extract_hall_voltage ( msg_from_piezon.data );
+        app_satellite_ctx.piezon.hall.voltage = lib_remote_pz_extract_hall_voltage ( msg_from_piezon.data );
 
         app_satellite_ctx.piezon.hall.cpt++;
     }
@@ -285,7 +285,7 @@ void app_satellite_detect_pz ( void )
 
     if ( true == lib_remote_pz_request ( LIB_REMOTE_PZ_REQ_DETECT, &msg_to_piezon, &msg_from_piezon ) )
     {
-        app_satellite_ctx.piezon.detect.voltage = lib_remote_af_extract_detect_voltage ( msg_from_piezon.data );
+        app_satellite_ctx.piezon.detect.voltage = lib_remote_pz_extract_detect_voltage ( msg_from_piezon.data );
 
         app_satellite_ctx.piezon.detect.cpt++;
     }

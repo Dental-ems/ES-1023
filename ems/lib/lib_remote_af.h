@@ -89,10 +89,10 @@ bool     lib_remote_af_encode                 ( LIB_REMOTE_AF_LL_REQ*  msg_to_en
 bool     lib_remote_af_decode                 ( LIB_REMOTE_AF_LL_RESP* msg_to_decode );
 uint8_t  lib_remote_af_checksum               ( uint8_t* trame, uint8_t size );
 uint8_t  lib_remote_af_extract_encoder        ( uint8_t* data );
-uint8_t  lib_remote_af_extract_holder_status  ( uint8_t* data );
+uint8_t  lib_remote_af_extract_holder_hook    ( uint8_t* data );
 uint8_t  lib_remote_af_extract_holder_conn    ( uint8_t* data );
 uint8_t  lib_remote_af_extract_holder_rfid    ( uint8_t* data );
-uint8_t  lib_remote_af_extract_rfid_status    ( uint8_t* data );
+uint8_t  lib_remote_af_extract_rfid_state     ( uint8_t* data );
 uint32_t lib_remote_af_extract_hall_voltage   ( uint8_t* data );
 uint32_t lib_remote_af_extract_detect_voltage ( uint8_t* data );
 bool     lib_remote_af_request                ( uint8_t req_type, LIB_REMOTE_AF_LL_REQ* msg_req, LIB_REMOTE_AF_LL_RESP* msg_resp );

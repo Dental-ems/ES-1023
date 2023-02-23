@@ -52,7 +52,7 @@ typedef struct
 typedef struct
 {
     uint32_t cpt;
-    uint8_t  status;
+    uint8_t  hook;
     uint8_t  conn;
     uint8_t  rfid;
 } APP_SATELLITE_HOLDER;
